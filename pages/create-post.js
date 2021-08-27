@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Select from '../node_modules/react-select';
+import NavBar from '../components/NavBar';
 
 function PostEditor(props) {
 
@@ -43,7 +44,8 @@ function PostEditor(props) {
     return (
         <div>
             <div>
-                <div>
+                <NavBar/>
+                <div className="create-post-page">
                     <form>
                         <textarea type="text" value={postBody} onChange={handlePostBodyChange} placeholder="Post Body" /><br />
                         <label>Add tags:</label>
