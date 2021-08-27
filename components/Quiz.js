@@ -3,10 +3,9 @@ import Carousel from 'react-bootstrap/Carousel'
 import Button from 'react-bootstrap';
 
 function Quiz(props) {
-//test
 
   return(
-  <div>
+  <div style={{width: "30%", height: "25%"}}>
     <Carousel className="">
   <Carousel.Item>
     <img
