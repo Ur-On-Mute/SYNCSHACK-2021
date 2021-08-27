@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 import Select from '../node_modules/react-select';
 import NavBar from '../components/NavBar';
+import Link from 'next/link';
 
 function PostEditor(props) {
 
     const [postBody, setPostBody] = useState("");
-    const [tags, setTags] = useState([])
+    const [tags, setTags] = useState([]);
+
     const options = [
         {value: 'maths', label: 'Maths'},
         {value: 'english', label: 'English'},
@@ -16,7 +18,6 @@ function PostEditor(props) {
     // const createPost = (event) => {
     //     event.preventDefault();
     //     props.addPost(postBody, tags);
-    //     console.log(tags);
     //     setPostBody("")
     // }
 
@@ -45,15 +46,22 @@ function PostEditor(props) {
         <div>
             <div>
                 <NavBar/>
-                <div className="create-post-page">
+                <div className="create-post-page card">
                     <form>
-                        <textarea type="text" value={postBody} onChange={handlePostBodyChange} placeholder="Post Body" /><br />
-                        <label>Add tags:</label>
-                        <div style={{width: '25%'}}>
-                            <Select  options={options} isMulti={true} onChange={handleMultiChange}/>
+                        <div style={{display: 'inline-block'}}>
+                            <input type="text" value={postBody} onChange={handlePostBodyChange} placeholder="Post Title" />
                         </div>
-
-                        <button className="btn btn-outline-success" type="submit">Submit Post</button>
+                        <div style={{display: 'inline-block', float: 'right'}}>
+                            <label>Add tags:</label>
+                            <div style={{width: '100%', display:'inline-block'}}>
+                                <Select  options={options} isMulti={true} onChange={handleMultiChange}/>
+                            </div>
+                        </div>
+                        <br></br>
+                        <textarea></textarea>
+                        <Link href="/">
+                            <button className="btn btn-outline-success" type="submit">Submit Post</button>
+                        </Link>
                     </form>
                 </div>
             </div>

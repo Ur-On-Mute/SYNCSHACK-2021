@@ -9,6 +9,9 @@ export default function Post(props) {
                     <h4 style={{color: '#731111'}} className='card-title'>
                         {props.postTitle}
                     </h4>
+                    {props.tags.map(tag => (
+                        <span key={tag} className="badge bg-secondary align-top">{tag}</span>
+                    ))}
                     <p style={{color: 'grey', fontWeight: 600}} className='card-text'>{props.postBody}</p>
                 </div>
                 </a>
