@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Center(props) {
     return (
       <div style={{width: "100%"}}>
-        <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "130vh"}}>
+        <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "150vh"}}>
           {props.children}
         </div>
       </div>
@@ -15,9 +15,13 @@ function Center(props) {
   }
 
 
+
+
 export default function Login() {
   return (
     <div className="App">
+        <img src="https://www.logo.wine/a/logo/Linux/Linux-Logo.wine.svg" alt="Logo"
+        style={{position: "absolute", bottom: "315px", left: "535px", height: "285px", width: "285px"}} />
         <Center>
             <div style={{width: "22em"}}>
                 <Form>
