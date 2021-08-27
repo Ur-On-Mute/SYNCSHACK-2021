@@ -3,11 +3,11 @@ import Carousel from 'react-bootstrap/Carousel'
 import Button from 'react-bootstrap';
 
 function Quiz(props) {
-
+//test
 
   return(
   <div>
-    <Carousel>
+    <Carousel className="">
   <Carousel.Item>
     <img
       className="d-block w-100"
