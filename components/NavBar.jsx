@@ -4,10 +4,10 @@ import Link from 'next/link';
 const NavBar = () => {
     return (
         <div>
-            <nav class="navbar navbar-expand navbar-dark sticky-top home-bar" style={{backgroundColor : '#333333', paddingLeft: 20}}>
+            <nav class="navbar navbar-expand navbar-dark sticky-top home-bar" style={{backgroundImage : 'linear-gradient(to right, #300707, #1c1c1c)', paddingLeft: 20, paddingTop: 20, paddingBottom: 20, fontSize: 20}}>
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
+                        <li class="nav-text">
                             <Link href="/home">
                                 <a class="nav-link" href="/home">Home</a>
                             </Link>
@@ -25,7 +25,9 @@ const NavBar = () => {
                     </ul>
                 </div>
                 <div className="float-right sign-in" style={{paddingRight: 20}}>
-                    <button className="btn btn-success" type="submit">Sign in</button>
+                    <Link href="/login">
+                        <button className="btn btn-success" type="submit">Sign in</button>
+                    </Link>
                 </div>
             </nav>
             
