@@ -52,20 +52,20 @@ export default function App() {
     <div className="App">
       <Router>
         <NavBar />
-        <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
-        <Route path="/" exact component = {() => (
-                  <div>
-                  <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>
-                      <input className='search-bar' onChange={handleQueryChange} value={searchQuery} placeholder="Search..."/>
-                  </div>
-                  <ForumHeader/>
-                  <div className="posts">
-                    {filteredPosts.map(post => (
-                      <Post key={post.body} postBody={post.body} postTitle={post.title} tags={post.tags} author={post.author} datePosted={post.datePosted}/>
-                    ))}
-                  </div>
-                </div>
-        )} />
+        <Switch>
+          <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
+          <div>
+            <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>
+                <input className='search-bar' onChange={handleQueryChange} value={searchQuery} placeholder="Search..."/>
+            </div>
+            <ForumHeader/>
+            <div className="posts">
+              {filteredPosts.map(post => (
+                <Post key={post.body} postBody={post.body} postTitle={post.title} tags={post.tags} author={post.author} datePosted={post.datePosted}/>
+              ))}
+            </div>
+          </div>
+        </Switch>
       </Router>
     </div>
   )

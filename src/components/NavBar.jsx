@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 const NavBar = () => {
     return (
         <div>
-            <nav class="navbar navbar-expand navbar-dark sticky-top home-bar" style={{backgroundImage : 'linear-gradient(to right, #300707, #1c1c1c)', paddingLeft: 20, paddingTop: 20, paddingBottom: 20, fontSize: 20}}>
+            <nav className="navbar navbar-expand navbar-dark fixed-top home-bar" style={{backgroundImage : 'linear-gradient(to right, #300707, #1c1c1c)', paddingLeft: 20, paddingTop: 20, paddingBottom: 20, fontSize: 20}}>
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-text">
