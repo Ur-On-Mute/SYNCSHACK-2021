@@ -24,6 +24,11 @@ function Equation(props){
   function getRandomInt(min, max) {
     return min + Math.floor(Math.random() * (max-min));
   }
+  const [equation_string, setEq] = useState();
+
+  useEffect(() => {
+    setEq(generate(props.metaEq));
+  }, [])
 
   function generate(metaEq) {
     if (metaEq == null) {return;}
@@ -37,34 +42,50 @@ function Equation(props){
       left = left.replace(constants[i], rand_val);
       right = right.replace(constants[i], rand_val);
     }
-    metaEq.constants_vals = constant_vals;
+    metaEq.constant_vals = constant_vals;
     return [left,right].join(" = ");
   }
-  return (<p>{generate(props.metaEq)}</p>)
+
+  return (<p>{equation_string}</p>)
 }
 
-function AnswerBox() {
+function AnswerBox(props) {
   return(<Form.Control
           type="text"
           placeholder="Input answer"
           aria-label="Input answer"
           width={0.25}
+          {...props}
           />)
 }
 
 function QuizQuestion(props) {
-  const answerRef = useRef(null);
-  function check() {
+  const buttonVariant = useState("secondary");
+  const [answer, setAnswer] = useState(null);
 
+  function regenerate(metaEq) {
+    var equation_string = [metaEq.LHS, metaEq.RHS].join(" = ")
+    for (const [key, value] of Object.entries(metaEq.constant_vals)) {
+      console.log(`${key}: ${value}`);
+      equation_string.replace(key, value)
+    }
+    return equation_string
+  }
+
+  function check() {
+      console.log(props.metaEq.constant_vals);
+      console.log(answer)
+      console.log(answer)
+      regenerate(props.metaEq)
   }
 
   return(
     <div>
         <h3>{props.header}</h3>
         <Equation metaEq={props.metaEq}> </Equation>
-        <AnswerBox ref={answerRef}/>
+        <AnswerBox onChange={(e) => setAnswer(e.target.value)}/>
         <Center>
-        <Button variant="secondary" onClick={check()}>
+        <Button variant="secondary" onClick={() => check()}>
         </Button>
         </Center>
     </div>
