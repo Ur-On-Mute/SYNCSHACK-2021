@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
 import React from 'react';
 import {useState, useRef} from 'react';
 import { Button } from 'react-bootstrap';
@@ -7,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { validate, parse } from 'fast-xml-parser';
 import reactDom from 'react-dom';
 import question_components from './question_components.js';
+import { Link, withRouter } from 'react-router-dom';
 
 const parser = new DOMParser();
 
@@ -52,7 +51,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <hr/><hr/>
         <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80%", height: "100%"}}>
           <br/>
@@ -68,4 +66,4 @@ function App() {
   );
 }
 
-export default App;
+export default withRouter(App);
