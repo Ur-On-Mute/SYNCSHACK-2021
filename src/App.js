@@ -53,7 +53,7 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar user={user}/>
+        <NavBar user={user} setUser={setUser}/>
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
           <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>

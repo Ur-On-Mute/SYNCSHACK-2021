@@ -28,7 +28,7 @@ const NavBar = (props) => {
                     <Link to="/login">
                         <button className="btn btn-success" type="submit">Sign in</button>
                     </Link>
-                </div> : <p style={{marginRight: '3%', marginTop: '1%', color: 'white'}}>Signed in as <b>{props.user}</b></p>}
+                </div> : <div style={{marginRight: '3%', color: 'white'}}>Signed in as <b>{props.user}</b><button style={{marginLeft: '20px'}} onClick={() => props.setUser('')} className="btn btn-success">Log Out</button></div>}
             </nav>
             
         </div>
