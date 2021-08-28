@@ -32,7 +32,7 @@ export default function App() {
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState("John Doe");
+  const [user, setUser] = useState("");
 
 
   const addPost = (postBody, postTags, postTitle, postAuthor) => {
@@ -56,7 +56,7 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar />
+        <NavBar setUser={setUser}/>
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
           <Route path="/create-question" exact render={(props) => <QuestionLiveEditor {...props} />}/>
