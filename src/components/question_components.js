@@ -7,6 +7,8 @@ import evaluatex from 'evaluatex/dist/evaluatex';
 
 addStyles()
 
+
+
 const variablesContext = React.createContext({
     x: 1
 });
@@ -39,7 +41,7 @@ function WidthConstrainer({width, children}){
 Components.WidthConstrainer = WidthConstrainer
 
 function SidePanel({children}){
-    return <div style={{flex: "1", "backgroundColor": "#ddd"}}>
+    return <div className="side-panel" style={{flex: "1", "backgroundColor": "#ddd"}}>
         {children}
     </div>
 }
@@ -47,7 +49,7 @@ function SidePanel({children}){
 Components.SidePanel = SidePanel
 
 function MainPanel({children}){
-    return <div style={{flex: "2"}}>
+    return <div className="main-" style={{flex: "2"}}>
         {children}
     </div>
 }
@@ -85,7 +87,7 @@ function Question({children}){
 
 Components.Question = Question;
 
-Components.Graph = ({children, width, height, scale, center})=><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
+Components.Graph = ({children, width, height, scale, center})=><svg className='graph' width={width} height={height}xmlns="http://www.w3.org/2000/svg">
     <defs>
         <pattern id="smallGrid" width={scale/2.5} height={scale/2.5} patternUnits="userSpaceOnUse">
             <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="0"/>

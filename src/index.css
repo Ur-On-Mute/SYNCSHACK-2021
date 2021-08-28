@@ -245,3 +245,20 @@ a {
   padding: 2%;
   box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.8);
 }
+
+.side-panel {
+  border-style: solid;
+  border-width: 4px;
+  padding: 2%;
+  margin-right: 20px;
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  text-align: center;
+}
+
+.graph {
+  border-style: solid;
+  border-width: 4px;
+  padding: 2%;
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.8);
+}
