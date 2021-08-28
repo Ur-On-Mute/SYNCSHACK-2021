@@ -93,7 +93,7 @@ function Line({cx, cy, scale, x1, y1, x2, y2}){
     try{
     const envContext = useContext(variablesContext);
     const s = parseFloat(scale);
-    return <line x1={parseFloat(cx)+inContext(x1,evaluatex)*s} y1={parseFloat(cy)-inContext(y1,evaluatex)*s} x2={parseFloat(cx)+inContext(x2,evaluatex)*s} y2={parseFloat(cy)-inContext(y2,evaluatex)*s} stroke="black" stroke-width="2px"/>;
+    return <line x1={parseFloat(cx)+inContext(x1,envContext)*s} y1={parseFloat(cy)-inContext(y1,envContext)*s} x2={parseFloat(cx)+inContext(x2,envContext)*s} y2={parseFloat(cy)-inContext(y2,envContext)*s} stroke="black" stroke-width="2px"/>;
     }catch(e){
         return <p>{toString(e)}</p>
     }
@@ -106,7 +106,7 @@ function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}
     try{
     cx = cx || 0;
     cy = cy || 0;
-    if (!f){
+    if (fName){
         f = envContext[fName];
     }
     var e = parseFloat(width);
