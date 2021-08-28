@@ -8,7 +8,8 @@ export default function LoginPage(props) {
 
     const [userName, setUsername] = useState('');
 
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
+        event.preventDefault();
         props.setUser(userName);
         history.push('/');
     }
@@ -37,7 +38,7 @@ export default function LoginPage(props) {
                         />
                     </div>
                 </div>
-                <button className='btn btn-success' style={{marginLeft:'34.3%'}}>Log in</button>
+                <button className='btn btn-success' style={{marginLeft:'34.3%'}} type="submit">Log in</button>
             </form>
         </div>
     )

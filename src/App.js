@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
+import LoginPage from './components/LoginPage';
 //import { createClient } from '@supabase/supabase-js';
 
 export default function App() {
@@ -77,10 +78,11 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar setUser={setUser}/>
+        <NavBar setUser={setUser} user={user}/>
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
           <Route path="/create-question" exact render={(props) => <QuestionLiveEditor {...props} />}/>
+          <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
           {posts.map(post => (
               <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
             ))}
