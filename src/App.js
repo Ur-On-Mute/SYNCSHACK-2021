@@ -3,13 +3,12 @@ import Post from './components/Post'
 import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import ForumHeader from './components/ForumHeader';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
-import { useState, addStyles } from 'react-mathquill';
 
 useEffect(() => addStyles(),[])
 
