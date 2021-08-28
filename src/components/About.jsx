@@ -24,11 +24,9 @@ export default function About() {
                         whether that be discussing mathematics concepts that spark their interests or
                         or asking for help with challening problems.
 
-                    </p>
-                    
-                </div>
-                
-            </div>
+                    </p>                    
+                </div>                
+            </div>            
         </div>
     )
 }
