@@ -16,25 +16,28 @@ function processChildren (children, passthroughattributes) {
       if (node.nodeType === 3) return node.nodeValue;
 
       // collect all attributes
-      let attributes = Array.from(node.attributes).reduce((attrs, attr) => {
-        attrs[attr.name] = attr.value;
-        return attrs;
-      }, {});
+      if (node.attributes){
+        let attributes = Array.from(node.attributes).reduce((attrs, attr) => {
+          attrs[attr.name] = attr.value;
+          return attrs;
+        }, {});
 
-      // create React component
-      if (question_components[node.nodeName]!=null) {
-        return React.createElement(question_components[node.nodeName], {
-          ...passthroughattributes,
-          ...attributes,
-          key: i
-        }, processChildren(node.childNodes,{
-          scale: attributes.scale, 
-          cy: (attributes.height || 0)/2,
-          cx: (attributes.width || 0)/2,
-        }));
-      }else{
-        return <p style={{color: "red"}}>invalid component "{node.nodeName}"</p>
-      }
+        // create React component
+        if (question_components[node.nodeName]!=null) {
+          return React.createElement(question_components[node.nodeName], {
+            ...passthroughattributes,
+            ...attributes,
+            key: i
+          }, processChildren(node.childNodes,{
+            scale: attributes.scale, 
+            cy: (attributes.height || 0)/2,
+            cx: (attributes.width || 0)/2,
+          }));
+        }else{
+          //return <p style={{color: "red"}}>invalid component "{node.nodeName}"</p>
+          return;
+        }
+    }
     });
 }
 

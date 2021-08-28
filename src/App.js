@@ -79,7 +79,7 @@ export default function App() {
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
           <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
           {posts.map(post => (
-              <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} postQuestionBody={post.questionBody} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
+              <Route path={`/${post.id}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} postQuestionBody={post.questionBody} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
             ))}
           <div>
             <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>
@@ -88,7 +88,7 @@ export default function App() {
             <ForumHeader/>
             <div className="posts">
               {filteredPosts.map(post => (
-                <Link to={`/${post.body.replaceAll(' ', '-')}`}>
+                <Link to={`/${post.id}`}>
                 <Post key={post.body} postBody={post.body} postTitle={post.title} tags={post.tags} author={post.author} datePosted={post.datePosted}/>
                 </Link>
               ))}

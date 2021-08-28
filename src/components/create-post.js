@@ -82,7 +82,6 @@ function PostEditor(props) {
                             </div>
                             <br/>
                             <div>
-                            <input type="text" onChange={console.log}/>
                             <WYSIWYGEditor questionBody={questionBody} setQuestionBody={setQuestionBody}/>
                             </div>
                             <br />

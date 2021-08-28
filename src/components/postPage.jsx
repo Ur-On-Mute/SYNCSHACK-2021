@@ -36,6 +36,9 @@ const PostPage = (props) => {
             <div className="card card-default post-page">
                 <a style={{textDecoration : 'none'}}>
                 <div className="card-body">
+                    <div style={{textAlign: 'right'}}>
+                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted}</p>
+                    </div>
                     <div>
                         <h4 style={{color: '#731111', display: 'inline-block'}} className='card-title'>
                             {props.postTitle}
@@ -47,12 +50,9 @@ const PostPage = (props) => {
                             <span key={tag} style={{marginRight: 5}} className="badge bg-secondary align-top">{tag}</span>
                         )) : <br/>}
                     </div>
-                    <div style={{textAlign: 'right'}}>
-                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted}</p>
-                    </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <SigmaMathRenderer XML={props.postQuestionBody}/>
-                    <Quiz> </Quiz>
+                    {/* <Quiz> </Quiz> */}
                 </div>
                 </a>
             </div>
