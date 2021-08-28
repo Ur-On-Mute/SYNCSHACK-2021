@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom';
 
-const NavBar = () => {
+const NavBar = (props) => {
     return (
         <div>
             <nav className="navbar navbar-expand navbar-dark fixed-top home-bar" style={{backgroundImage : 'linear-gradient(to right, #300707, #1c1c1c)', paddingLeft: 20, paddingTop: 20, paddingBottom: 20, fontSize: 20}}>
@@ -24,11 +24,11 @@ const NavBar = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="float-right sign-in" style={{paddingRight: 20}}>
+                {props.user === "" ? <div className="float-right sign-in" style={{paddingRight: 20}}>
                     <Link to="/login">
                         <button className="btn btn-success" type="submit">Sign in</button>
                     </Link>
-                </div>
+                </div> : <p style={{marginRight: '3%', marginTop: '1%', color: 'white'}}>Signed in as <b>{props.user}</b></p>}
             </nav>
             
         </div>

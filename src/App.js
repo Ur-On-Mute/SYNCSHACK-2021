@@ -2,6 +2,7 @@ import NavBar from './components/NavBar'
 import Post from './components/Post'
 import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
+import LoginPage from './components/LoginPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
 import ForumHeader from './components/ForumHeader';
@@ -28,7 +29,7 @@ export default function App() {
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState("John Doe");
+  const [user, setUser] = useState("");
 
 
   const addPost = (postBody, postTags, postTitle, postAuthor) => {
@@ -52,9 +53,10 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar />
+        <NavBar user={user}/>
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
+          <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
           {posts.map(post => (
               <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
             ))}
