@@ -235,3 +235,13 @@ a {
   left: 37%;
   bottom: 45%;
 }
+
+.question-data-input {
+  margin-right: 20px;
+  border-style: solid !important;
+  border-width: 4px !important;
+  background-color: aliceblue;
+  border-color: #000;
+  padding: 2%;
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.8);
+}

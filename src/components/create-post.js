@@ -47,19 +47,6 @@ function PostEditor(props) {
         setPostTitle(e.target.value);
     }
 
-    // const handleTagsChange = (event) => {
-    //     if (event.target.checked) {
-    //         setTags(prevTags => ([...prevTags, event.target.name]))
-    //     } else {
-    //         let index = tags.indexOf(event.target.name);
-    //         let array = [...tags];
-    //         array.splice(index, 1);
-    //         setTags(array);
-    //     }
-        
-    //     console.log(tags);
-    // }
-
     const handleMultiChange = (inputValue) => {
         setTags(inputValue.map(x => (x.value)))
     }
@@ -82,6 +69,7 @@ function PostEditor(props) {
                             </div>
                             <br/>
                             <div>
+                            <h2>XML Editor</h2>
                             <WYSIWYGEditor questionBody={questionBody} setQuestionBody={setQuestionBody}/>
                             </div>
                             <br />

@@ -8,7 +8,7 @@ const NavBar = (props) => {
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-text">
-                            <Link to="/home">
+                            <Link to="/">
                                 <a class="nav-link" href="/home">Home</a>
                             </Link>
                         </li>

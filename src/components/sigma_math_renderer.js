@@ -61,8 +61,8 @@ function WYSIWYGEditor({questionBody, setQuestionBody}) {
         <hr/><hr/>
         <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80em", height: "100%"}}>
           <br/>
-          <textarea onChange={console.log} onChange={onXMLUpdate} style={{flex:1, height: "400px"}}/>
-          <div style={{flex:2}}>
+          <textarea className="question-data-input" onChange={console.log} onChange={onXMLUpdate} style={{flex:1, height: "400px"}}/>
+          <div className="math-renderer" style={{flex:2}}>
             <SigmaMathRenderer XML={questionBody}/>
           </div>
         </div>
