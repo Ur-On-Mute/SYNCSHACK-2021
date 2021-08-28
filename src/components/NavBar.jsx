@@ -13,11 +13,6 @@ const NavBar = (props) => {
                             </Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/">
-                                <a class="nav-link">Forum</a>
-                            </Link>
-                        </li>
-                        <li class="nav-item">
                             <Link to="/about">
                                 <a class="nav-link" >About</a>
                             </Link>

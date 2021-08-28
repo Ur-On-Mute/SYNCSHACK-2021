@@ -87,7 +87,7 @@ function Question({children}){
 
 Components.Question = Question;
 
-Components.Graph = ({children, width, height, scale, center})=><svg className='graph' width={width} height={height}xmlns="http://www.w3.org/2000/svg">
+Components.Graph = ({children, width, height, scale, center})=><div className='graph'><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
     <defs>
         <pattern id="smallGrid" width={scale/2.5} height={scale/2.5} patternUnits="userSpaceOnUse">
             <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="0"/>
@@ -104,7 +104,8 @@ Components.Graph = ({children, width, height, scale, center})=><svg className='g
     <rect width="50%" height="50%" fill="url(#grid)" x="50%" />
     <rect width="50%" height="50%" fill="url(#grid)" x="50%" y="50%"/>
     <rect width="50%" height="50%" fill="url(#grid)" y="50%" />
-</svg>;
+</svg>
+</div>;
 
 var inContext = (k, envContext)=>{
     return evaluatex(k)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});

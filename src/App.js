@@ -2,6 +2,7 @@ import NavBar from './components/NavBar'
 import Post from './components/Post'
 import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
+import About from './components/About';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState, useEffect} from 'react';
 import ForumHeader from './components/ForumHeader';
@@ -78,6 +79,7 @@ export default function App() {
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
           <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
+          <Route path="/about" exact component={() => <About />}/>
           {posts.map(post => (
               <Route path={`/${post.id}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} postQuestionBody={post.questionBody} datePosted={post.datePosted} postTags={post.tags} user={user} postId = {post.id}/>)} />
             ))}
