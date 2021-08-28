@@ -71,17 +71,18 @@ function AnswerBox(props) {
 
 function QuizQuestion(props) {
   const [buttonVariant, setVariant] = useState("secondary");
-  const [answer, setAnswer] = useState(null);
+  // const [answer, setAnswer] = useState(null);
   const answerButtonRef = useRef(null)
   const addAnswerRef = useRef(null)
   const [metaEq, setMetaEq] = useState(props.metaEq);
-  let answers = []
+  const [answers, setAnswer] = useState([])
   const [answersAmount, setAmount] = useState(1);
 
   function minusAnswer() {
     if (addAnswerRef == null) {return;}
     if (answersAmount-1 > 0){
       setAmount(answersAmount-1)
+      answers.pop()
     }
   }
 
@@ -90,6 +91,14 @@ function QuizQuestion(props) {
     if (answersAmount+1 < 10){
       setAmount(answersAmount+1)
     }
+  }
+
+  function changeAnswer(n, latex) {
+    let n_answers = answers;
+    n_answers.splice(n,1,latex);
+    n_answers[n] = latex;
+    setAnswer(n_answers)
+    console.log(answers)
   }
 
 
@@ -104,18 +113,17 @@ function QuizQuestion(props) {
   }
 
   function check() {
-      if (answer == null || metaEq == null) {return;}
+      if (answers == null || metaEq == null || answers.length == 0) {return;}
       console.log(metaEq.constant_vals);
       const [left,right] = regenerate(metaEq);
       console.log(left, right);
-      var out;
+      var out = [];
       try {
         const q = evaluatex(left);
-        const i = evaluatex(answer,{}, { latex: true })()
-        console.log(q,answer);
-        console.log(i);
-        out = q({"x":i});
-        console.log(out);
+        answers.forEach((a) => {
+          const i = evaluatex(a,{}, { latex: true })()
+          out.push(q({"x":i}));
+        });
       }
       catch (error) {
         console.error(error);
@@ -125,14 +133,16 @@ function QuizQuestion(props) {
         setVariant("warning")
       }
       else {
-        var correct = (Number(out.toFixed(3)) == right)
+        var correct = true;
+        for (var o=0; o<out.length; o++) {
+          if (Number(out[o].toFixed(3)) != right) {
+            correct = false
+          }
+        }
         setVariant(correct?'success':'danger')
         asyncTime(() => props.push(correct), 400)
       }
       asyncTime(() => setVariant("secondary"), 300)
-
-      // props.push(correct);
-      // new Promise(resolve => {setTimeout(() => setVariant("secondary"), 300)})
   }
 
   function fixButton(buttonRef) {
@@ -154,8 +164,8 @@ function QuizQuestion(props) {
         <ButtonGroup>
         <Button style={{marginRight:'5%'}} size="lg" variant={"success"} onClick={() => {fixButton();addAnswer();}}></Button>
         <Center>
-        {[...Array(Math.max(1,answersAmount)).keys()].map(() =>
-          <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
+        {[...Array(Math.max(1,answersAmount)).keys()].map((n) =>
+          <AnswerBox onChange={(e) => changeAnswer(n, e.latex())}/>
         )}
         </Center>
         <Button style={{marginLeft:'5%'}} size="lg" variant={"danger"} onClick={() => {fixButton();minusAnswer()}}></Button>
