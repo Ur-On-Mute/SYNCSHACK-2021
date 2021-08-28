@@ -19,6 +19,9 @@ class Input extends React.Component {
     if (this.props.setUser) {
       this.props.setUser(event.target.value);
     }
+    if (this.props.setPassword) {
+      this.props.setPassword(event.target.value);
+    }
   }
 
   handleKeyPress(event) {

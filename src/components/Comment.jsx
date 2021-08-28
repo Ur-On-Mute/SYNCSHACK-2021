@@ -9,7 +9,7 @@ export default function Comment(props) {
                     <p className='card-text' style={{float: 'right', paddingLeft:"10px"}}>{props.author}</p>
                     <p style={{color: '#1c1c1c', fontWeight: 500, float: 'left', width:'80%'}} className="card-text">{props.commentBody}</p>
                     <div style={{textAlign: 'right'}}>
-                        <p className="text-muted" style={{float: 'right', color: 'black'}}>{props.datePosted.toLocaleDateString()}</p>
+                        <p className="text-muted" style={{float: 'right', color: 'black'}}>{props.datePosted}</p>
                     </div>
                 </div>
                 </a>
