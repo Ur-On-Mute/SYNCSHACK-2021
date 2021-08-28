@@ -10,9 +10,19 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
+//import { createClient } from '@supabase/supabase-js';
 
 export default function App() {
   useEffect(() => addStyles(),[])
+
+  // const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMDEzMTE1MCwiZXhwIjoxOTQ1NzA3MTUwfQ.aQ-qjMSmOEYkVcRfRIE5xw3vUp535_vsOdVB99vqeco';
+  // const supabaseUrl = 'https://vqrbavrrwolieprkduit.supabase.co';
+
+  //const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+  // const [posts, setPosts] = useState([]);
+
   const [posts, setPosts] = useState([
     {
       body : "This is a test post body",
@@ -30,9 +40,20 @@ export default function App() {
     }
   ])
 
+  // const getPost = async () => {
+  //   const testQuery = await supabase
+  //     .from("Posts")
+  //     .select()
+  //     .single()
+  //   const testPost = testQuery.body
+  //   //setPosts([...posts, testPost])
+  // }
+
+  //getPost();
+
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState("John Doe");
+  const [user, setUser] = useState("");
 
 
   const addPost = (postBody, postTags, postTitle, postAuthor) => {
