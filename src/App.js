@@ -18,10 +18,6 @@ export default function App() {
     addStyles();
     getPosts();
   },[])
-
-
-
-
   const [posts, setPosts] = useState([]);
 
   // const [posts, setPosts] = useState([
@@ -50,7 +46,6 @@ export default function App() {
     }
     console.log(data)
     console.log(posts);
-    
   }
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
@@ -62,7 +57,7 @@ export default function App() {
     const {data, error} = await supabase
       .from('posts')
       .insert([
-        {title: postTitle, body: postBody, tags: postTags, author: postAuthor, questionBody: "HELLO "}
+        {title: postTitle, body: postBody, tags: postTags, author: postAuthor, questionBody: postQuestionBody}
       ])
     getPosts();
   }

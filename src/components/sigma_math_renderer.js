@@ -50,7 +50,7 @@ function SigmaMathRenderer({XML}){
 function WYSIWYGEditor({questionBody, setQuestionBody}) {
   const onXMLUpdate = (e)=>{
     const val = e.target.value;
-    //setQuestionBody(val);
+    setQuestionBody(val);
   };
   return (
     <div className="App">
@@ -58,7 +58,7 @@ function WYSIWYGEditor({questionBody, setQuestionBody}) {
         <hr/><hr/>
         <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80em", height: "100%"}}>
           <br/>
-          <input onChange={console.log} style={{flex:1, height: "400px"}}/>
+          <input onChange={console.log} onChange={onXMLUpdate} style={{flex:1, height: "400px"}}/>
           <div style={{flex:2}}>
             <SigmaMathRenderer XML={questionBody}/>
           </div>
