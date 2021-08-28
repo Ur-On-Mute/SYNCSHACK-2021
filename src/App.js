@@ -2,15 +2,17 @@ import NavBar from './components/NavBar'
 import Post from './components/Post'
 import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
-import LoginPage from './components/LoginPage';
-import About from './components/About';
+import QuestionLiveEditor from './components/micah_question_xmler';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import ForumHeader from './components/ForumHeader';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import Quiz from './components/Quiz.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { addStyles } from 'react-mathquill';
 
 export default function App() {
-
+  useEffect(() => addStyles(),[])
   const [posts, setPosts] = useState([
     {
       body : "This is a test post body",
@@ -30,12 +32,12 @@ export default function App() {
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState("John Doe");
 
 
   const addPost = (postBody, postTags, postTitle, postAuthor) => {
     setPosts([...posts, {
-      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date() 
+      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
     }]);
     setFilteredPosts([...posts, {
       body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
@@ -54,11 +56,10 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar user={user} setUser={setUser}/>
+        <NavBar />
         <Switch>
-          <Route path="/about" exact component= {() => <About />}/>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
-          <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
+          <Route path="/create-question" exact render={(props) => <QuestionLiveEditor {...props} />}/>
           {posts.map(post => (
               <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
             ))}
