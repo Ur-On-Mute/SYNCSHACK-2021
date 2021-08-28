@@ -238,3 +238,8 @@ a {
   border-radius: 4px;
 }
 
+.image-centre {
+  position: absolute;
+  width: 350px;
+  
+}

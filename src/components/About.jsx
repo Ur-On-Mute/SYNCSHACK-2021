@@ -4,14 +4,14 @@ export default function About() {
     return (
         <div>
             <div className="about-margin">
-                <div style={{padding: "5px"}}>
+                <div style={{padding: "7px"}}>
                     <div>
                         <h2 style={{color: "#80352d"}}>About</h2>
                     </div>
                 </div>                    
             </div>
             <div className="about-margin">
-                <div style={{padding: "5px"}}>
+                <div style={{padding: "7px"}}>
                     <p>
                         Sigma Forum is a dynamic mathematics learning tool and community, 
                         targeted towards upper secondary and University students and educators. We provide
@@ -24,7 +24,14 @@ export default function About() {
                         whether that be discussing mathematics concepts that spark their interests or
                         or asking for help with challening problems.
 
-                    </p>                    
+                    </p>
+                    <div style= {{display: "flex", alignItems: "center", justifyContent: "center", padding: "20px"}}>
+                        <img
+                        src= "http://www.sciencefriday.com/wp-content/uploads/2016/08/Artboard-1.png"
+                        alt= "Math"
+                        width= "300px"
+                        />
+                    </div>                    
                 </div>                
             </div>            
         </div>
