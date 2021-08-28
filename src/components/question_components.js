@@ -40,6 +40,7 @@ function SidePanel({children}){
         {children}
     </div>
 }
+
 Components.SidePanel = SidePanel
 
 function MainPanel({children}){
@@ -47,6 +48,7 @@ function MainPanel({children}){
         {children}
     </div>
 }
+
 Components.MainPanel = MainPanel
 
 function Question({children}){
@@ -64,6 +66,7 @@ function Question({children}){
         </Center>
     </variablesContext.Provider>
 }
+
 Components.Question = Question;
 
 Components.Graph = ({children, width, height, scale, center})=><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
@@ -125,6 +128,7 @@ function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}
         return <p>ERROR</p>
     }
 }
+
 Components.FunctionLine = FunctionLine;
 
 function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}){
@@ -150,6 +154,7 @@ function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}
         return <p>ERROR</p>
     }
 }
+
 Components.FunctionDots = FunctionDots
 
 Components.n = ()=><br/>;
@@ -159,6 +164,7 @@ Components.Latex = ({val})=><StaticMathField>{val}</StaticMathField>;
 Components.h3 = function({children}){
     return <h3>{children}</h3>
 }
+
 Components.div = function({children}){
     return <div>{children}</div>
 }
@@ -197,6 +203,7 @@ function VariableSlider({val, minValue, maxValue}){
         }} class="slider" id="myRange"/>
     </div>;
 }
+
 Components.VariableSlider = VariableSlider
 
 function DotObject({scale, cx, cy, x, y, color}){
@@ -228,6 +235,7 @@ function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
         return <p>{toString(e)}</p>
     }
 }
+
 Components.ImageObject = ImageObject
 
 function TextObject({scale, cx, cy, x, y, txt}){
@@ -243,6 +251,7 @@ function TextObject({scale, cx, cy, x, y, txt}){
         return <p>{toString(e)}</p>
     }
 }
+
 Components.TextObject = TextObject
 
 function TimeTicker({val, rate}){
