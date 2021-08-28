@@ -56,9 +56,11 @@ const PostPage = (props) => {
             }
             {newCommentFlag && <CommentEditor addComment={addComment}/>}
             {newCommentFlag && <button style={{width: '10%', marginLeft: '8%', marginTop: '0%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(false))}>Cancel Comment</button>}
-            {comments.map((comment) => (
-                <Comment author={comment.author} commentBody={comment.body} datePosted={comment.datePosted}/>
-            ))}
+            <div className="comments">
+                {comments.map((comment) => (
+                    <Comment author={comment.author} commentBody={comment.body} datePosted={comment.datePosted}/>
+                ))}
+            </div>
         </div>
     )
 }
