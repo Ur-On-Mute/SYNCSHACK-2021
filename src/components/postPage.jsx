@@ -80,6 +80,7 @@ const PostPage = (props) => {
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <button className='btn btn-outline-danger' style={{marginBottom: "10px"}} onClick={()=>{setShowSource(!showSource)}}>Show Source Code</button>
+                    <a className='btn btn-outline-danger' style={{marginBottom: "10px", "right": 0, "float": "right"}} href={"fork/"+props.postId}>Fork</a>
                     {showSource && 
                         <SyntaxHighlighter className="syntax-highlighter" language="xml" style={dark}>
                             {props.postQuestionBody}

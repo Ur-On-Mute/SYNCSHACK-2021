@@ -56,7 +56,7 @@ function MainPanel({children}){
 
 Components.MainPanel = MainPanel
 
-function Question({children}){
+function Question({children, defaultScale}){
     const [a, setA] = useState(0);
     const [b, setB] = useState(0);
     const [c, setC] = useState(0);
@@ -74,9 +74,11 @@ function Question({children}){
     const [f8, setF8] = useState();
     const [f9, setF9] = useState();
     const [f10, setF10] = useState();
+    const [scale, setScale] = useState(parseInt(defaultScale||"1") || 1);
+    const [cx, setCX] = useState(300);
+    const [cy, setCY] = useState(200);
 
-
-    return <variablesContext.Provider value={{a,b,c,f,g,h, setA, setB, setC, setF, setG, setH, f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,setF1,setF2,setF3,setF4,setF5,setF6,setF7,setF8,setF9,setF10}}>
+    return <variablesContext.Provider value={{scale, setScale,cx,setCX,cy,setCY, a,b,c,f,g,h, setA, setB, setC, setF, setG, setH, f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,setF1,setF2,setF3,setF4,setF5,setF6,setF7,setF8,setF9,setF10}}>
             <Center>
             <div style={{width: "100%", "background-color": "#fff", "height": "100%", "display": "flex", "flex-direction": "row"}}>
             {children}
@@ -87,34 +89,61 @@ function Question({children}){
 
 Components.Question = Question;
 
-Components.Graph = ({children, width, height, scale, center})=><div className='graph'><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
+function Graph({children, width, height, center}){
+const envContext = useContext(variablesContext);
+const [mouseClickPos, setMouseClickPos] = useState([]);
+const scale = envContext.scale;
+useEffect(()=>{
+    envContext.setCX(width/2);
+    envContext.setCY(height/2);
+},[])
+return <div className='graph'>
+    <input type="range" min="10" max="200" value={scale} onChange={(e)=>{envContext["setScale"](e.target.value)}} class="slider" id="myRange"/><br/>
+    <svg width={width} onMouseDown={(e)=>{
+        setMouseClickPos([[e.pageX,e.pageY], [envContext.cx, envContext.cy]]);
+    }} onMouseMove={(e)=>{
+        if (mouseClickPos[0]){
+            const offset = [e.pageX-mouseClickPos[0][0], e.pageY-mouseClickPos[0][1]];
+            envContext.setCX(mouseClickPos[1][0] + offset[0]);
+            envContext.setCY(mouseClickPos[1][1] + offset[1]);
+        }
+    }}
+    onMouseUp={(e)=>{
+        setMouseClickPos([null, mouseClickPos[1]]);
+    }}
+
+    height={height}xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <pattern id="smallGrid" width={scale/2.5} height={scale/2.5} patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="0"/>
+        <pattern id="smallGrid" width={scale/5} height={scale/5} patternUnits="userSpaceOnUse">
+            <path d={"M "+scale/5+" 0 L 0 0 0 "+scale/5} fill="none" stroke="gray" stroke-width="0.2"/>
         </pattern>
-        <pattern id="grid" width={scale*2} height={scale*2} patternUnits="userSpaceOnUse">
-            <rect width={scale*2} height={scale*2} fill="url(#smallGrid)"/>
-            <path d={"M "+scale*2+" 0 L 0 0 0 "+scale*2} fill="none" stroke="gray" stroke-width="0"/>
+        <pattern patternTransform={"translate("+envContext.cx+" "+envContext.cy+")"}  id="grid" width={scale} height={scale} patternUnits="userSpaceOnUse">
+            <rect width={scale} height={scale} fill="url(#smallGrid)"/>
+            <path d={"M "+scale+" 0 L 0 0 0 "+scale} fill="none" stroke="black" stroke-width="0.5"/>
         </pattern>
     </defs>
     {children}
-    <line x1="100%" y1="50%" x2="0%" y2="50%" fill="none" stroke="black" stroke-width="1"/>
-    <line x1="50%" y1="100%" x2="50%" y2="0%" fill="none" stroke="black" stroke-width="1"/>
-    <rect width="50%" height="50%" fill="url(#grid)" />
+    <line x1="100%" y1={envContext.cy} x2="0%" y2={envContext.cy} fill="none" stroke="black" stroke-width="1"/>
+    <line x1={envContext.cx} y1="100%" x2={envContext.cx} y2="0%" fill="none" stroke="black" stroke-width="1"/>
+    <rect  width="50%" height="50%" fill="url(#grid)" />
     <rect width="50%" height="50%" fill="url(#grid)" x="50%" />
     <rect width="50%" height="50%" fill="url(#grid)" x="50%" y="50%"/>
     <rect width="50%" height="50%" fill="url(#grid)" y="50%" />
 </svg>
-</div>;
+</div>};
+
+Components.Graph=Graph;
 
 var inContext = (k, envContext)=>{
     return evaluatex(k)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
 }
 
-function Line({cx, cy, scale, x1, y1, x2, y2}){
+function Line({x1, y1, x2, y2}){
     try{
     const envContext = useContext(variablesContext);
-    const s = parseFloat(scale);
+    const cx=envContext.cx;
+    const cy=envContext.cy;
+    const s = parseFloat(envContext.scale);
     return <line x1={parseFloat(cx)+inContext(x1,envContext)*s} y1={parseFloat(cy)-inContext(y1,envContext)*s} x2={parseFloat(cx)+inContext(x2,envContext)*s} y2={parseFloat(cy)-inContext(y2,envContext)*s} stroke="black" stroke-width="2px"/>;
     }catch(e){
         return <p>{toString(e)}</p>
@@ -123,22 +152,25 @@ function Line({cx, cy, scale, x1, y1, x2, y2}){
 
 Components.Line = Line
 
-function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}){
+function FunctionLine({fName, f, width, color, resolution, begin}){
     const envContext = useContext(variablesContext);
     try{
-    cx = cx || 0;
-    cy = cy || 0;
+    const cx=envContext.cx;
+    const cy=envContext.cy;
     if (fName){
         f = envContext[fName];
     }
+    if (width=="auto"){
+        width=cx;
+    }
     var e = parseFloat(width);
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var r = parseFloat(resolution);
     var b = parseFloat(begin || "0") || 0;
-    var fn = evaluatex(f);
+    var fn = evaluatex(f, {e: 2.718});
     return <>
-        {<path d={"M"+(Array.from(Array(parseFloat(e*resolution*2)).keys()).map((i)=>{
-            const m=(i+b)/r;
+        {<path d={"M"+(Array.from(Array((e*r)).keys()).map((i)=>{
+            const m=(i/r+b);
             return parseFloat(cx)+(m*s) + "," + (parseFloat(cy)-(s*fn({x: m, e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c})))
             //return <circle key={i} cx={parseInt(cx)+(m*s)} cy={parseInt(cy)-(s*fn({x: m, e: 2.718}))} r="3" fill={color || "black"}/>;
         }).join(" "))+""} fill="none" stroke={color} stroke-width="3"/>};
@@ -150,18 +182,18 @@ function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}
 
 Components.FunctionLine = FunctionLine;
 
-function RiemannSquares({fName, f, scale, width, cx, cy, color, squares, begin}){
+function RiemannSquares({fName, f, width, color, squares, begin}){
     const envContext = useContext(variablesContext);
     try{
-    cx = cx || 0;
-    cy = cy || 0;
+    const cx=envContext.cx;
+    const cy=envContext.cy;
     if (fName){
         f = envContext[fName];
     }
     var e = parseFloat(width);
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var b = parseFloat(begin || "0") || 0;
-    var fn = evaluatex(f);
+    var fn = evaluatex(f, {e: 2.718});
     return <>
         {Array.from(Array(parseFloat(squares)).keys()).map((i)=>{
             const m=((i/squares * width)+b);
@@ -180,16 +212,16 @@ function RiemannSquares({fName, f, scale, width, cx, cy, color, squares, begin})
 
 Components.RiemannSquares = RiemannSquares;
 
-function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}){
+function FunctionDots({fName, f, width, color, resolution, begin}){
     const envContext = useContext(variablesContext);
     try{
-    cx = cx || 0;
-    cy = cy || 0;
+        const cx=envContext.cx;
+        const cy=envContext.cy;
     if (!f){
         f = envContext[fName];
     }
     var e = parseFloat(width);
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var r = parseFloat(resolution);
     var b = parseFloat(begin || "0") || 0;
     var fn = evaluatex(f);
@@ -255,12 +287,12 @@ function VariableSlider({val, minValue, maxValue}){
 
 Components.VariableSlider = VariableSlider
 
-function DotObject({scale, cx, cy, x, y, color}){
+function DotObject({x, y, color}){
     const envContext = useContext(variablesContext);
+    const cx=envContext.cx;
+    const cy=envContext.cy;
     try{
-    cx = cx || 0;
-    cy = cy || 0;
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     return <circle cx={parseFloat(cx)+s*fx} cy={parseFloat(cy)-s*fy} r="3" fill={color || "black"}/>;
@@ -271,12 +303,12 @@ function DotObject({scale, cx, cy, x, y, color}){
 
 Components.DotObject = DotObject
 
-function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
+function ImageObject({x, y, imageUrl, height, width}){
     const envContext = useContext(variablesContext);
+    const cx=envContext.cx;
+    const cy=envContext.cy;
     try{
-    cx = cx || 0;
-    cy = cy || 0;
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     return <image href={imageUrl} x={parseFloat(cx)+s*fx-width/2} y={parseFloat(cy)-s*fy-height/2} height={height} width={width}/>;
@@ -287,12 +319,12 @@ function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
 
 Components.ImageObject = ImageObject
 
-function TextObject({scale, cx, cy, x, y, txt}){
+function TextObject({x, y, txt}){
     const envContext = useContext(variablesContext);
+    const cx=envContext.cx;
+    const cy=envContext.cy;
     try{
-    cx = cx || 0;
-    cy = cy || 0;
-    var s = parseFloat(scale);
+    var s = parseFloat(envContext.scale);
     var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
     return <text x={parseFloat(cx)+s*fx} y={parseFloat(cy)-s*fy}>{txt}</text>;
@@ -322,5 +354,7 @@ function Title({children}){
     return <><br/><p style={{width: "100%", "font-weight": "bold", textAlign: "center", "font-size": "20px"}}>{children}</p></>
 }
 Components.Title = Title
+
+Components.SuperContainer=({children})=><>{children}</>
 
 export default Components;

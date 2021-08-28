@@ -49,11 +49,12 @@ function SigmaMathRenderer({XML}){
 function WYSIWYGEditor({questionBody, setQuestionBody}) {
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header" style={{width: "100%"}}>
         <hr/><hr/>
-        <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80em", height: "100%"}}>
+        <div class="flex-container" style={{"flex-direction": "column", "display": "flex", width: "100%", height: "100%"}}>
           <br/>
-          <div style={{flex:1}}>
+          <div style={{flex:1, width: "100%", height: "300px", overflow: "visible"}}>
+            <div style={{width:"100%", height: "300px", overflow: "scroll"}}>
           <ReactPrismEditor
             language={"xml"}
             theme={"tomorrow"}
@@ -63,6 +64,7 @@ function WYSIWYGEditor({questionBody, setQuestionBody}) {
               setQuestionBody(code)
             }}
           />
+          </div><br/>
           </div>
           <div className="math-renderer" style={{flex:2}}>
             <SigmaMathRenderer XML={questionBody}/>

@@ -83,6 +83,9 @@ export default function App() {
           {posts.map(post => (
               <Route path={`/${post.id}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} postQuestionBody={post.questionBody} datePosted={post.datePosted} postTags={post.tags} user={user} postId = {post.id}/>)} />
             ))}
+          {posts.map(post => (
+              <Route path={`/fork/${post.id}`} exact render={(props) => (<PostEditor {...props} postQuestionBody={post.questionBody} author={user} addPost={addPost}/>)} />
+            ))}
           <div>
             <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>
                 <input className='search-bar' onChange={handleQueryChange} value={searchQuery} placeholder="Search..."/>

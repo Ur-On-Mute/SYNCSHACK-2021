@@ -6,11 +6,9 @@ import {
     SigmaMathRenderer,
   } from "./sigma_math_renderer";
 
-
 function PostEditor(props) {
-
     const [postBody, setPostBody] = useState("");
-    const [questionBody, setQuestionBody] = useState("");
+    const [questionBody, setQuestionBody] = useState(props.postQuestionBody || "");
     const [tags, setTags] = useState([]);
     const [postTitle, setPostTitle] = useState("");
 
