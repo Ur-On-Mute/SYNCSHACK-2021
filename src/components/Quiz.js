@@ -237,6 +237,8 @@ function AlgebraQuestionWrapper(props) {
   )
 }
 
+const { Provider, Consumer } = React.createContext({ color: 'white' });
+
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
   // let testMetaEq = () => new MetaEq("Ax","B",["A","B"], [10,50,10])
@@ -248,6 +250,22 @@ function Quiz(props) {
   const [answers, setAnswer] = useState([]);
   const [check, setCheck] = useState(false);
   const [buttonVariant, setVariant] = useState("secondary");
+
+
+  function QuizWrapper(props) {
+    return (
+      <>
+
+        {React.Children.map(props.children, (c => {
+          <AlgebraQuestionWrapper
+            header={c.header} description={c.description}  answers_count={c.answers_count}
+            LHS={c.LHS} RHS={c.RHS} constants={c.constants} constant_ranges={c.constant_range}
+            check={check} setCheck={setCheck} answers={answers} setAnswer={setAnswer} correctAnswers={correctAnswers} push={push} constantVals={constantVals} setConstantVals={setConstantVals} buttonVariant={buttonVariant} setVariant={setVariant}
+          />
+        }))}
+      </>
+    )
+  }
 
   console.log(questions);
   function push(correct) {
@@ -275,7 +293,14 @@ function Quiz(props) {
   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
 
     <Slides width="30em" height="15em" total={questions.length} current={current}>
-      {props.children}
+    {React.Children.map(props.children, child => {
+      try {
+          return React.cloneElement(child, {buttonVariant: buttonVariant, answers: answers, setAnswer: setAnswer, correctAnswers: correctAnswers, check: check, setCheck:setCheck, push: push, constantVals: constantVals, setConstantVals:setConstantVals, setVariant: setVariant}, null);
+      }
+      catch (exception) {
+        console.log(exception)
+      }
+    })}
     </Slides>
     <p style={{textAlign: "center"}}>{correctAnswers}</p>
   </div>
@@ -284,25 +309,48 @@ function Quiz(props) {
   </div>
 );
 
-function QuizWrapper(props) {
-  return (
-    <Quiz>
-      {React.Children.map(props.children, (c) => {
-        <AlgebraQuestionWrapper
-          header={c.header} description={c.description}  answers_count={c.answers_count}
-          LHS={c.LHS} RHS={c.RHS} constants={c.constants} constant_ranges={c.constant_range}
-          check={check} setCheck={setCheck} answers={answers} setAnswer={setAnswer} correctAnswers={correctAnswers} push={push} constantVals={constantVals} setConstantVals={setConstantVals} buttonVariant={buttonVariant} setVariant={setVariant}
-        />
-      })}
-      {props.children}
-    </Quiz>
-  )
-}
-
 // <QuizQuestion header="Q3" description="Solve the following quadratic"  correctAnswers={correctAnswers} answers_count={2}>
 //   <Equation metaEq={new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])} push={push} constantVals={constantVals} setConstantVals={setConstantVals}> </Equation>
 // </QuizQuestion>
 
+}
+
+function Quiz1() {
+  return (
+    <Quiz>
+    <AlgebraQuestionWrapper
+      header={"Q1"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"Ax^2+Bx+C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
+    />
+    <AlgebraQuestionWrapper
+      header={"Q2"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"Ax^2+Bx+C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
+    />
+    <AlgebraQuestionWrapper
+      header={"Q3"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"Ax^2+Bx+C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
+    />
+    </Quiz>
+  )
+}
+
+function Quiz2() {
+  return (
+    <Quiz>
+    <AlgebraQuestionWrapper
+      header={"Q1"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"(A\\ln(x))^2 - B\\ln(x) - C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
+    />
+    <AlgebraQuestionWrapper
+      header={"Q2"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"Ax^2 + 2*A*Bx - (A*x + B)^2 + B"} RHS={"C"} constants={["A","B","C"]} constant_ranges={[10,50,30]}
+    />
+    <AlgebraQuestionWrapper
+      header={"Q3"} description={"Solve Quadratic"}  answers_count={2}
+      LHS={"(Ax^3)/Bx - (Ax^2)/B"} RHS={"C"} constants={["A","B","C"]} constant_ranges={[10,50,30]}
+    />
+    </Quiz>
+  )
 }
 
 // <QuizQuestion
@@ -333,4 +381,5 @@ function QuizWrapper(props) {
 // </QuizQuestion>
 
 
-export {Quiz, AlgebraQuestionWrapper};
+
+export {Quiz, Quiz1, Quiz2, AlgebraQuestionWrapper};

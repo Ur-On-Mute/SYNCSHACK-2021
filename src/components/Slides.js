@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import '../slides.css'
 
 function Slide(props) {
@@ -42,11 +42,11 @@ function Slides(props) {
     style={{width: `${props.width}`, height: `${props.height}`}}
     >
     <div className="slide-subwrapper" ref={slidesRef}>
-    {children.map(c => (
+    {React.Children.map(children, (c => (
       <Slide width={props.width} height={props.height}>
        {c}
       </Slide>
-    ))}
+    )))}
     </div>
     </div>
     </>

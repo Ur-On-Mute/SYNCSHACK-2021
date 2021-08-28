@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import Comment from './Comment';
 import CommentEditor from './CommentEditor';
-import Quiz from './Quiz';
+import {Quiz, AlgebraQuestionWrapper} from './Quiz';
 import { supabase } from '../supabaseClient';
 import {
     WYSIWYGEditor,
@@ -76,7 +76,12 @@ const PostPage = (props) => {
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <SigmaMathRenderer XML={props.postQuestionBody}/>
-                    {/* <Quiz> </Quiz> */}
+                    {<Quiz>
+                      <AlgebraQuestionWrapper
+  header={"Q1"} description={"Solve Quadratic"}  answers_count={2}
+  LHS={"Ax^2+Bx+C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
+/>
+                      </Quiz>}
                 </div>
                 </a>
             </div>
@@ -85,7 +90,7 @@ const PostPage = (props) => {
             }
             {newCommentFlag && <button style={{width: '10%', marginLeft: '8%', marginTop: '3%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(false))}>Cancel Comment</button>}
             {newCommentFlag && <CommentEditor addComment={addComment}/>}
-            
+
             <div className="comments">
                 {comments.map((comment) => (
                     <Comment author={comment.user} commentBody={comment.body} datePosted={comment.datePosted}/>
