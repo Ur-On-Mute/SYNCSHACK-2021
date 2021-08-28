@@ -2,7 +2,6 @@ import NavBar from './components/NavBar'
 import Post from './components/Post'
 import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
-import QuestionLiveEditor from './components/micah_question_xmler';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState, useEffect} from 'react';
 import ForumHeader from './components/ForumHeader';
@@ -59,11 +58,11 @@ export default function App() {
   const [user, setUser] = useState("");
 
 
-  const addPost = async (postBody, postTags, postTitle, postAuthor) => {
+  const addPost = async (postBody, postTags, postTitle, postAuthor, postQuestionBody) => {
     const {data, error} = await supabase
       .from('posts')
       .insert([
-        {title: postTitle, body: postBody, tags: postTags, author: postAuthor}
+        {title: postTitle, body: postBody, tags: postTags, author: postAuthor, questionBody: "HELLO "}
       ])
     getPosts();
   }
@@ -83,10 +82,9 @@ export default function App() {
         <NavBar setUser={setUser} user={user}/>
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
-          <Route path="/create-question" exact render={(props) => <QuestionLiveEditor {...props} />}/>
           <Route path="/login" exact component={() => <LoginPage setUser={setUser}/>}/>
           {posts.map(post => (
-              <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
+              <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} postQuestionBody={post.questionBody} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
             ))}
           <div>
             <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>

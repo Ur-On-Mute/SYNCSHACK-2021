@@ -4,9 +4,12 @@ import { useState } from 'react';
 import Comment from './Comment';
 import CommentEditor from './CommentEditor';
 import Quiz from './Quiz';
+import {
+    WYSIWYGEditor,
+    SigmaMathRenderer,
+  } from "./sigma_math_renderer";
 
 const PostPage = (props) => {
-
     const [comments, setComments] = useState([
         {
             author: 'Jordan',
@@ -48,6 +51,10 @@ const PostPage = (props) => {
                         <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted}</p>
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
+                    <p>
+                        {props.postQuestionBody}
+                    </p>
+                    <SigmaMathRenderer XML={props.postQuestionBody}/>
                     <Quiz> </Quiz>
                 </div>
                 </a>
