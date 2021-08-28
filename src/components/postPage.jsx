@@ -74,7 +74,7 @@ const PostPage = (props) => {
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <button className='btn btn-outline-danger' onClick={()=>{setShowSource(!showSource)}}>Show Source Code</button>
                     {showSource && 
-                        <SyntaxHighlighter language="xml" style={dark}>
+                        <SyntaxHighlighter className="syntax-highlighter" language="xml" style={dark}>
                             {props.postQuestionBody}
                         </SyntaxHighlighter>
                     }
