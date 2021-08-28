@@ -24,7 +24,7 @@ a {
 .posts {
   width: 70%;
   margin: 1em 20%;
-  margin-top: 80px;
+  margin-top: 40px;
 }
 
 .post-body {
@@ -59,8 +59,6 @@ a {
 .create-post {
   background-color: #300707 !important;
   border-color: #fff !important;
-  position: fixed;
-  z-index: 1;
   transition: 1s;
   box-shadow: 10px 10px 10px rgba(0,0,0,0.5) !important;
 }

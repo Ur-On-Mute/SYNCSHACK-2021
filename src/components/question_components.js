@@ -40,6 +40,7 @@ function SidePanel({children}){
         {children}
     </div>
 }
+
 Components.SidePanel = SidePanel
 
 function MainPanel({children}){
@@ -47,6 +48,7 @@ function MainPanel({children}){
         {children}
     </div>
 }
+
 Components.MainPanel = MainPanel
 
 function Question({children}){
@@ -64,6 +66,7 @@ function Question({children}){
         </Center>
     </variablesContext.Provider>
 }
+
 Components.Question = Question;
 
 Components.Graph = ({children, width, height, scale, center})=><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
@@ -85,14 +88,28 @@ Components.Graph = ({children, width, height, scale, center})=><svg width={width
     <rect width="50%" height="50%" fill="url(#grid)" y="50%" />
 </svg>;
 
-Components.Line = ({x1, y1, x2, y2})=><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black"></line>;
+var inContext = (k, envContext)=>{
+    return evaluatex(k)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+}
+
+function Line({cx, cy, scale, x1, y1, x2, y2}){
+    try{
+    const envContext = useContext(variablesContext);
+    const s = parseFloat(scale);
+    return <line x1={parseFloat(cx)+inContext(x1,envContext)*s} y1={parseFloat(cy)-inContext(y1,envContext)*s} x2={parseFloat(cx)+inContext(x2,envContext)*s} y2={parseFloat(cy)-inContext(y2,envContext)*s} stroke="black" stroke-width="2px"/>;
+    }catch(e){
+        return <p>{toString(e)}</p>
+    }
+};
+
+Components.Line = Line
 
 function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}){
     const envContext = useContext(variablesContext);
     try{
     cx = cx || 0;
     cy = cy || 0;
-    if (!f){
+    if (fName){
         f = envContext[fName];
     }
     var e = parseFloat(width);
@@ -111,6 +128,7 @@ function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}
         return <p>ERROR</p>
     }
 }
+
 Components.FunctionLine = FunctionLine;
 
 function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}){
@@ -136,6 +154,7 @@ function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}
         return <p>ERROR</p>
     }
 }
+
 Components.FunctionDots = FunctionDots
 
 Components.n = ()=><br/>;
@@ -145,6 +164,7 @@ Components.Latex = ({val})=><StaticMathField>{val}</StaticMathField>;
 Components.h3 = function({children}){
     return <h3>{children}</h3>
 }
+
 Components.div = function({children}){
     return <div>{children}</div>
 }
@@ -183,6 +203,7 @@ function VariableSlider({val, minValue, maxValue}){
         }} class="slider" id="myRange"/>
     </div>;
 }
+
 Components.VariableSlider = VariableSlider
 
 function DotObject({scale, cx, cy, x, y, color}){
@@ -216,6 +237,22 @@ function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
 }
 
 Components.ImageObject = ImageObject
+
+function TextObject({scale, cx, cy, x, y, txt}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    var s = parseFloat(scale);
+    var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    return <text x={parseFloat(cx)+s*fx} y={parseFloat(cy)-s*fy}>{txt}</text>;
+    }catch(e){
+        return <p>{toString(e)}</p>
+    }
+}
+
+Components.TextObject = TextObject
 
 function TimeTicker({val, rate}){
     const variables = useContext(variablesContext);

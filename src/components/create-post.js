@@ -1,10 +1,15 @@
 import React, {useState} from 'react'
 import Select from 'react-select';
 import { Link, withRouter } from 'react-router-dom';
+import {
+    WYSIWYGEditor,
+    SigmaMathRenderer,
+  } from "./sigma_math_renderer";
 
 function PostEditor(props) {
 
     const [postBody, setPostBody] = useState("");
+    const [questionBody, setQuestionBody] = useState("");
     const [tags, setTags] = useState([]);
     const [postTitle, setPostTitle] = useState("");
 
@@ -29,7 +34,7 @@ function PostEditor(props) {
 
     const createPost = (event) => {
         event.preventDefault();
-        props.addPost(postBody, tags, postTitle, props.author);
+        props.addPost(postBody, tags, postTitle, props.author, questionBody);
         setPostBody("")
         props.history.push('/');
      }
@@ -75,13 +80,10 @@ function PostEditor(props) {
                                     <Select className="col-sm-3" id="tag-select" options={options} isMulti={true} onChange={handleMultiChange}/>
                                 </div>
                             </div>
-                            <br></br>
-                            <div className="form-group row">
-                                <label for="post-body-input" className="col-sm-1 col-form-label">Description: </label>
-                                <textarea id = "post-body-input" className="col-sm-10" onChange={handlePostBodyChange} placeholder="Post Description" value={postBody} required></textarea>
+                            <br/>
+                            <div>
+                            <WYSIWYGEditor questionBody={questionBody} setQuestionBody={setQuestionBody}/>
                             </div>
-                            <br />
-                            <textarea rows="50" className="question-input">PLACEHOLDER FOR QUESTION INPUT</textarea>
                             <br />
                             <button className="btn btn-outline-success" type="submit">Submit Post</button>
                         </div>
