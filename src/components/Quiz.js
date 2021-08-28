@@ -284,7 +284,7 @@ function Quiz(props) {
     setQuestions(newQuestions);
     setCurrent(current+1);
     if (current >= questions.length-1) {
-      setCurrent(0)
+      setCurrent(0);
     }
   }
   return(

@@ -76,12 +76,6 @@ const PostPage = (props) => {
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <SigmaMathRenderer XML={props.postQuestionBody}/>
-                    {<Quiz>
-                      <AlgebraQuestionWrapper
-  header={"Q1"} description={"Solve Quadratic"}  answers_count={2}
-  LHS={"Ax^2+Bx+C"} RHS={"D"} constants={["A","B","C","D"]} constant_ranges={[10,50,30,30]}
-/>
-                      </Quiz>}
                 </div>
                 </a>
             </div>

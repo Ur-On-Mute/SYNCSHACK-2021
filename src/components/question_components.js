@@ -4,7 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import Center from './Center.js';
 import {addStyles, EditableMathField, StaticMathField} from 'react-mathquill';
 import evaluatex from 'evaluatex/dist/evaluatex';
-import {Quiz, AlgebraQuestionWrapper} from './Quiz';
+import {Quiz, AlgebraQuestionWrapper, Quiz1, Quiz2} from './Quiz';
 
 addStyles()
 
@@ -14,6 +14,8 @@ const variablesContext = React.createContext({
 
 var Components = {};
 
+Components.Quiz1 = Quiz1;
+Components.Quiz2 = Quiz2;
 Components.Quiz = Quiz;
 Components.AlgebraQuestionWrapper = AlgebraQuestionWrapper;
 
