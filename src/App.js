@@ -4,7 +4,7 @@ import PostEditor from './components/create-post';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
 import ForumHeader from './components/ForumHeader';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 export default function App() {
 
@@ -18,7 +18,7 @@ export default function App() {
     },
     {
       body : "I mean it",
-      title : "I am incredibly racist",
+      title : "Made an interesting question about integration",
       tags : ["Calculus"],
       author : "William Saffery",
       datePosted : new Date('December 17, 2014')
@@ -61,7 +61,9 @@ export default function App() {
             <ForumHeader/>
             <div className="posts">
               {filteredPosts.map(post => (
+                <Link to={`/${post.body.replaceAll(' ', '-')}`}>
                 <Post key={post.body} postBody={post.body} postTitle={post.title} tags={post.tags} author={post.author} datePosted={post.datePosted}/>
+                </Link>
               ))}
             </div>
           </div>

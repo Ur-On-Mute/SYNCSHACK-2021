@@ -13,14 +13,15 @@ export default function Post(props) {
                         <p className="text-muted" style={{display: 'inline-block', float: 'right'}}>{props.author}</p>
                     </div>
                     <div>
-                        {props.tags.map(tag => (
-                            <span key={tag} className="badge bg-secondary align-top">{tag}</span>
-                        ))}
+                        {props.tags.length > 0 ? props.tags.map(tag => (
+                            <span key={tag} style={{marginRight: 5}} className="badge bg-secondary align-top">{tag}</span>
+                        )) : <br/>}
                     </div>
-                    <div>
-                        <p style={{display: 'inline-block', float: 'right'}}>{props.datePosted.toLocaleDateString()}</p>
+                    <div style={{textAlign: 'right'}}>
+                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted.toLocaleDateString()}</p>
                     </div>
-                    <p style={{color: 'grey', fontWeight: 600}} className='card-text'>{props.postBody}</p>
+                    <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
+                    
                 </div>
                 </a>
             </div>

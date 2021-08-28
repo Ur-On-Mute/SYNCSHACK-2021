@@ -7,6 +7,7 @@ function PostEditor(props) {
 
     const [postBody, setPostBody] = useState("");
     const [tags, setTags] = useState([]);
+    const [postTitle, setPostTitle] = useState("");
 
     const options = [
         {value: 'maths', label: 'Maths'},
@@ -17,13 +18,17 @@ function PostEditor(props) {
 
     const createPost = (event) => {
         event.preventDefault();
-        props.addPost(postBody, tags, 'arsoitnarsoitn', props.author);
+        props.addPost(postBody, tags, postTitle, props.author);
         setPostBody("")
         props.history.push('/');
      }
 
     const handlePostBodyChange = (e) => {
         setPostBody(e.target.value);
+    }
+
+    const handlePostTitleChange = (e) => {
+        setPostTitle(e.target.value);
     }
 
     // const handleTagsChange = (event) => {
@@ -47,20 +52,28 @@ function PostEditor(props) {
         <div>
             <div>
                 <div className="create-post-page card">
-                    <form onSubmit={createPost}>
-                        <div style={{display: 'inline-block'}}>
-                            <input type="text" value={postBody} onChange={handlePostBodyChange} placeholder="Post Title" />
-                        </div>
-                        <div style={{display: 'inline-block', float: 'right'}}>
-                            <label>Add tags:</label>
-                            <div style={{width: '100%', display:'inline-block'}}>
-                                <Select options={options} isMulti={true} onChange={handleMultiChange}/>
+                    <form className="needs-validation" onSubmit={createPost}>
+                        <div>
+                            <div className="form-group row">
+                                <label for="titleInput" className="col-sm-1 col-form-label">Title: </label>
+                                <input type="text" id="titleInput" value={postTitle} onChange={handlePostTitleChange} className="col-sm-10" placeholder="Post Title" required/>
                             </div>
+                            <div className="form-group row tag-row">
+                                <label className="col-sm-1 col-form-label" for="tag-select">Add Tags:</label>
+                                <div className="col-sm-10 tag-input">
+                                    <Select className="col-sm-3" id="tag-select" options={options} isMulti={true} onChange={handleMultiChange}/>
+                                </div>
+                            </div>
+                            <br></br>
+                            <div className="form-group row">
+                                <label for="post-body-input" className="col-sm-1 col-form-label">Description: </label>
+                                <textarea id = "post-body-input" className="col-sm-10" onChange={handlePostBodyChange} placeholder="Post Description" value={postBody}></textarea>
+                            </div>
+                            <br />
+                            <textarea rows="50" className="question-input">PLACEHOLDER FOR QUESTION INPUT</textarea>
+                            <br />
+                            <button className="btn btn-outline-success" type="submit">Submit Post</button>
                         </div>
-                        <br></br>
-                        <textarea></textarea>
-                        <button className="btn btn-outline-success" type="submit">Submit Post</button>
-                        
                     </form>
                 </div>
             </div>

@@ -24,11 +24,19 @@ a {
 .posts {
   width: 70%;
   margin: 1em 20%;
+  margin-top: 80px;
 }
 
 .post-body {
-  margin-top : 20px;
+  margin-bottom : 20px;
   box-shadow: 20px 20px #000;
+  transition: 0.1s;
+}
+
+.post-body:hover {
+  margin-top: 25px;
+  margin-bottom : 11px;
+  box-shadow: 20px 14px #000;
 }
 
 .search-bar {
@@ -42,21 +50,48 @@ a {
   border-style: solid;
   border-color: black;
   background-color: #fff;
-  box-shadow: 20px 20px #000;
+  box-shadow: 10px 10px #000;
 }
 
 .create-post {
   background-color: #300707 !important;
   border-color: #fff !important;
-  box-shadow: 10px 10px black;
+  position: fixed;
+  z-index: 1;
+  transition: 1s;
+}
+
+.create-post:hover {
+  margin-top: 10px;
+  position: absolute;
 }
 
 .create-post-page{
   margin: 5%;
   padding: 20px;
   display: inline-block;
+  box-shadow: 20px 20px black;
 }
 
 * {
   text-decoration: none !important;
+}
+
+.post-form {
+  margin-right: 5em;
+}
+
+.tag-input {
+  padding-left: 0 !important;
+}
+
+.form-group {
+  margin-top: 0px !important;
+}
+
+.question-input {
+  width: 100%;
+}
+.tag-row {
+  margin-top: 25px !important;
 }
