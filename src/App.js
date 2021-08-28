@@ -8,8 +8,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
 import ForumHeader from './components/ForumHeader';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
 
 export default function App() {
+
+  // const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMDEzMTE1MCwiZXhwIjoxOTQ1NzA3MTUwfQ.aQ-qjMSmOEYkVcRfRIE5xw3vUp535_vsOdVB99vqeco';
+  // const supabaseUrl = 'https://vqrbavrrwolieprkduit.supabase.co';
+
+  //const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+  // const [posts, setPosts] = useState([]);
 
   const [posts, setPosts] = useState([
     {
@@ -27,6 +36,17 @@ export default function App() {
       datePosted : new Date('December 17, 2014')
     }
   ])
+
+  // const getPost = async () => {
+  //   const testQuery = await supabase
+  //     .from("Posts")
+  //     .select()
+  //     .single()
+  //   const testPost = testQuery.body
+  //   //setPosts([...posts, testPost])
+  // }
+
+  //getPost();
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
