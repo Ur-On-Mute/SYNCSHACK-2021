@@ -1,7 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
+import Quiz from './components/Quiz.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { addStyles } from 'react-mathquill';
+import React, { useState, useEffect, useRef } from 'react';
 
 function App() {
+  useEffect(() => addStyles(),[])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,6 +23,8 @@ function App() {
         >
           Learn React
         </a>
+        <Quiz></Quiz>
+        <br></br>
       </header>
     </div>
   );

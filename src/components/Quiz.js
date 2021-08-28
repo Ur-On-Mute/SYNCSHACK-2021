@@ -3,18 +3,20 @@ import Carousel from 'react-bootstrap/Carousel'
 import {Button, Form} from 'react-bootstrap';
 import evaluatex from 'evaluatex/dist/evaluatex';
 import Center from './Center.js';
+import {EditableMathField, StaticMathField} from 'react-mathquill'
 
 class MetaEq {
-  constructor(left, right, constants) {
+  constructor(left, right, constants, constant_ranges) {
     this.LHS = left;
     this.RHS = right;
     this.constants = constants;
+    this.constant_ranges = constant_ranges;
     this.constant_vals = null
   }
 }
 
 class Question {
-  constructor(equation, metaEq) {
+  constructor(header, metaEq) {
     this.header = header;
     this.metaEq = metaEq;
   }
@@ -34,10 +36,11 @@ function Equation(props){
     if (metaEq == null) {return;}
     var left = metaEq.LHS;
     var right = metaEq.RHS;
-    var constants = metaEq.constants;
+    const constants = metaEq.constants;
+    const constant_ranges = metaEq.constant_ranges;
     var constant_vals = {};
     for (var i = 0; i < constants.length; i++) {
-      const rand_val = getRandomInt(0, 100);
+      const rand_val = getRandomInt(0, constant_ranges[i]);
       constant_vals[constants[i]] = rand_val;
       left = left.replace(constants[i], rand_val);
       right = right.replace(constants[i], rand_val);
@@ -46,46 +49,61 @@ function Equation(props){
     return [left,right].join(" = ");
   }
 
-  return (<p>{equation_string}</p>)
+  return ( <StaticMathField>{equation_string}</StaticMathField>)
 }
 
 function AnswerBox(props) {
-  return(<Form.Control
-          type="text"
-          placeholder="Input answer"
-          aria-label="Input answer"
-          width={0.25}
-          {...props}
-          />)
+  return(<EditableMathField
+    latex="Answer"
+    {...props}
+    /> )
 }
 
 function QuizQuestion(props) {
-  const buttonVariant = useState("secondary");
+  const [buttonVariant, setVariant] = useState("secondary");
   const [answer, setAnswer] = useState(null);
+  const buttonRef = useRef(null)
 
   function regenerate(metaEq) {
-    var equation_string = [metaEq.LHS, metaEq.RHS].join(" = ")
+    var [left, right] = [metaEq.LHS, metaEq.RHS]
     for (const [key, value] of Object.entries(metaEq.constant_vals)) {
-      console.log(`${key}: ${value}`);
-      equation_string.replace(key, value)
+      //console.log(`${key}: ${value}`);
+      left = left.replace(key, value)
+      right = right.replace(key, value)
     }
-    return equation_string
+    return [left,right]
   }
 
   function check() {
+      if (answer == null) {return;}
       console.log(props.metaEq.constant_vals);
-      console.log(answer)
-      console.log(answer)
-      regenerate(props.metaEq)
+      const [left,right] = regenerate(props.metaEq);
+      console.log(left, right);
+      const q = evaluatex(left);
+      console.log(q,answer);
+      console.log(evaluatex(answer,{}, { latex: true })());
+      const out = q({"x":evaluatex(answer, { latex: true })()});
+      if (out == right) {
+        console.log("Hurrrahh!")
+      }
+      setVariant(((out == right) ? 'danger': 'success'))
+      new Promise(resolve => setTimeout(() => setVariant("secondary"), 3))
+      console.log(out);
+  }
+
+  function fixButton() {
+    buttonRef.current.blur()
+    check()
   }
 
   return(
     <div>
         <h3>{props.header}</h3>
         <Equation metaEq={props.metaEq}> </Equation>
-        <AnswerBox onChange={(e) => setAnswer(e.target.value)}/>
+        <br/>
+        <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
         <Center>
-        <Button variant="secondary" onClick={() => check()}>
+        <Button variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
         </Button>
         </Center>
     </div>
@@ -93,8 +111,8 @@ function QuizQuestion(props) {
 }
 
 function Quiz(props) {
-  let testMetaEq = new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"])
-  let questions = [{header:"Q1", metaEq:testMetaEq},{header:"Q2", metaEq:testMetaEq},{header:"Q3", metaEq:testMetaEq}]
+  let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
+  let questions = [{header:"Q1", metaEq:testMetaEq()},{header:"Q2", metaEq:testMetaEq()},{header:"Q3", metaEq:testMetaEq()}]
   return(
   <div style={{marginTop: "2em" ,width: "30em", height: "15em", backgroundColor: "grey"}}>
     <Carousel variant="dark" interval={null}>
