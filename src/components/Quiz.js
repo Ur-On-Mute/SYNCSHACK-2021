@@ -16,8 +16,9 @@ class MetaEq {
 }
 
 class Question {
-  constructor(header, metaEq) {
+  constructor(header, description, metaEq) {
     this.header = header;
+    this.description = description;
     this.metaEq = metaEq;
   }
 }
@@ -53,8 +54,11 @@ function Equation(props){
 }
 
 function AnswerBox(props) {
+  const [latex, setLatex] = useState("Answer")
+
   return(<EditableMathField
-    latex="Answer"
+    latex={latex}
+    onClick={() => setLatex("")}
     {...props}
     /> )
 }
@@ -87,7 +91,7 @@ function QuizQuestion(props) {
         console.log("Hurrrahh!")
       }
       setVariant(((out == right) ? 'danger': 'success'))
-      new Promise(resolve => setTimeout(() => setVariant("secondary"), 3))
+      // new Promise(resolve => setTimeout(() => setVariant("secondary"), 3))
       console.log(out);
   }
 
@@ -97,32 +101,44 @@ function QuizQuestion(props) {
   }
 
   return(
-    <div>
+    <div style={{border: "2px solid black",borderRadius:"0.25rem", backgroundColor: "white"}}>
+        <div style={{textAlign: "center", marginTop:"1%"}}>
         <h3>{props.header}</h3>
+        <p>{props.description}</p>
         <Equation metaEq={props.metaEq}> </Equation>
         <br/>
-        <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
+        </div>
+        <div  style={{textAlign: "center", marginTop:"6%",marginBottom:"2%"}}>
         <Center>
-        <Button variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
+        <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
+        </Center>
+        <Center>
+        <Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
         </Button>
         </Center>
+        </div>
     </div>
   )
-}
+}//userSelect={"text"}
 
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
-  let questions = [{header:"Q1", metaEq:testMetaEq()},{header:"Q2", metaEq:testMetaEq()},{header:"Q3", metaEq:testMetaEq()}]
+  let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq())
+  let questions = [1,2,3].map(testQuestion);
+  console.log(questions)
+  // let questions = [{header:"Q1", description:"Solve the following quadratic", metaEq:testMetaEq()},{header:"Q2", metaEq:testMetaEq()},{header:"Q3", metaEq:testMetaEq()}]
   return(
-  <div style={{marginTop: "2em" ,width: "30em", height: "15em", backgroundColor: "grey"}}>
+  <Center>
+  <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
     <Carousel variant="dark" interval={null}>
     {questions.map(q => (
       <Carousel.Item>
-      <QuizQuestion header={q.header} metaEq={q.metaEq}/>
+      <QuizQuestion {...q}/>
       </Carousel.Item>
     ))}
     </Carousel>
   </div>
+  </Center>
 );
 
 }

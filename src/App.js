@@ -10,10 +10,8 @@ import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
 
-useEffect(() => addStyles(),[])
-
 export default function App() {
-
+  useEffect(() => addStyles(),[])
   const [posts, setPosts] = useState([
     {
       body : "This is a test post body",

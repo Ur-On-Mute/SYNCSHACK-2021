@@ -3,6 +3,7 @@ import React from 'react'
 import { useState } from 'react';
 import Comment from './Comment';
 import CommentEditor from './CommentEditor';
+import Quiz from './Quiz';
 
 const PostPage = (props) => {
 
@@ -47,11 +48,11 @@ const PostPage = (props) => {
                         <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted.toLocaleDateString()}</p>
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
-                    <textarea rows="30" className="question-input">PLACEHOLDER FOR QUESTION</textarea>
+                    <Quiz> </Quiz>
                 </div>
                 </a>
             </div>
-            {!newCommentFlag && 
+            {!newCommentFlag &&
                 <button style={{width: '8%', marginLeft: '8%', marginTop: '3%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(true))}>Post Comment</button>
             }
             {newCommentFlag && <CommentEditor addComment={addComment}/>}
