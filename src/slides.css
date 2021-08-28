@@ -1,5 +1,6 @@
 .slide-wrapper {
-  width: 100%;
+  width: 30em;
+  height: 15em;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -9,4 +10,11 @@
 
 .slide-subwrapper {
   display: flex;
+}
+
+/* //Style={{justifyContent: "center", overflow: "hidden", backgroundColor: 'black', display: "flex"}} */
+.slide {
+  /* width: 30em; */
+  /* display:flex;
+  flex-shrink: 0; */
 }
