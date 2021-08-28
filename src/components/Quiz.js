@@ -132,7 +132,7 @@ function QuizQuestion(props) {
         <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
         </Center>
         <Center>
-        <Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>{props.header}
+        <Button style={{marginTop:"3%"}} size="lg" variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
         </Button>
         </Center>
         </div>
