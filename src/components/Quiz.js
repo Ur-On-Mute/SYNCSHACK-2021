@@ -4,6 +4,7 @@ import {Button, Form} from 'react-bootstrap';
 import evaluatex from 'evaluatex/dist/evaluatex';
 import Center from './Center.js';
 import {EditableMathField, StaticMathField} from 'react-mathquill'
+import Slides from './Slides.js'
 
 class MetaEq {
   constructor(left, right, constants, constant_ranges) {
@@ -67,6 +68,9 @@ function QuizQuestion(props) {
   const [buttonVariant, setVariant] = useState("secondary");
   const [answer, setAnswer] = useState(null);
   const buttonRef = useRef(null)
+  const [metaEq, setMetaEq] = useState(props.metaEq);
+
+
 
   function regenerate(metaEq) {
     var [left, right] = [metaEq.LHS, metaEq.RHS]
@@ -79,25 +83,40 @@ function QuizQuestion(props) {
   }
 
   function check() {
-      if (answer == null) {return;}
-      console.log(props.metaEq.constant_vals);
-      const [left,right] = regenerate(props.metaEq);
+      if (answer == null || metaEq == null) {return;}
+      console.log(metaEq.constant_vals);
+      const [left,right] = regenerate(metaEq);
       console.log(left, right);
-      const q = evaluatex(left);
-      console.log(q,answer);
-      console.log(evaluatex(answer,{}, { latex: true })());
-      const out = q({"x":evaluatex(answer, { latex: true })()});
-      if (out == right) {
-        console.log("Hurrrahh!")
+      var out;
+      try {
+        const q = evaluatex(left);
+        const i = evaluatex(answer,{}, { latex: true })()
+        console.log(q,answer);
+        console.log(i);
+        out = q({"x":i});
+        console.log(out);
       }
-      setVariant(((out == right) ? 'danger': 'success'))
-      // new Promise(resolve => setTimeout(() => setVariant("secondary"), 3))
-      console.log(out);
+      catch (error) {
+        console.error(error);
+        setVariant("warning")
+      }//Number(out.toFixed(3))
+      if (Number(out.toFixed(3)) == right) {
+        // props.push();
+        setVariant('success')
+      }
+      else if (out == null) {
+        setVariant("warning")
+      }
+      else {
+        setVariant('danger')
+      }
+      new Promise(resolve => {setTimeout(() => setVariant("secondary"), 300)})
   }
 
   function fixButton() {
-    buttonRef.current.blur()
     check()
+    if (buttonRef==null) {return;}
+    buttonRef.current.blur()
   }
 
   return(
@@ -113,32 +132,38 @@ function QuizQuestion(props) {
         <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
         </Center>
         <Center>
-        <Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
+        <Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>{props.header}
         </Button>
         </Center>
         </div>
     </div>
   )
-}//userSelect={"text"}
+}//<Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => props.push()}>{"tester"}</Button>
 
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
   let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq())
   let questions = [1,2,3].map(testQuestion);
-  console.log(questions)
-  // let questions = [{header:"Q1", description:"Solve the following quadratic", metaEq:testMetaEq()},{header:"Q2", metaEq:testMetaEq()},{header:"Q3", metaEq:testMetaEq()}]
+  const [current, setCurrent] = useState(0);
+  console.log(questions);
+  function push() {
+    setCurrent(current+1);
+    if (current >= questions.length-1) {
+      setCurrent(0)
+    }
+  }
   return(
-  <Center>
+  <div style={{marginBottom: "2em"}}>
+  <Center height="15em">
   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
-    <Carousel variant="dark" interval={null}>
+    <Slides width="30em" height="15em" total={questions.length} current={current}>
     {questions.map(q => (
-      <Carousel.Item>
-      <QuizQuestion {...q}/>
-      </Carousel.Item>
+      <QuizQuestion {...q} push={push}/>
     ))}
-    </Carousel>
+    </Slides>
   </div>
   </Center>
+  </div>
 );
 
 }
