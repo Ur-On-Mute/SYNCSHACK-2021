@@ -11,59 +11,61 @@ import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
 import LoginPage from './components/LoginPage';
-//import { createClient } from '@supabase/supabase-js';
+import {supabase} from './supabaseClient.js'
+require('dotenv').config();
 
 export default function App() {
-  useEffect(() => addStyles(),[])
-
-  // const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMDEzMTE1MCwiZXhwIjoxOTQ1NzA3MTUwfQ.aQ-qjMSmOEYkVcRfRIE5xw3vUp535_vsOdVB99vqeco';
-  // const supabaseUrl = 'https://vqrbavrrwolieprkduit.supabase.co';
-
-  //const supabase = createClient(supabaseUrl, supabaseKey);
+  useEffect(() => {
+    addStyles();
+    getPosts();
+  },[])
 
 
-  // const [posts, setPosts] = useState([]);
 
-  const [posts, setPosts] = useState([
-    {
-      body : "This is a test post body",
-      title : "This is a test post title",
-      tags : ["Trigonometry", "Algebra"],
-      author : "math god",
-      datePosted : new Date('December 17, 2013')
-    },
-    {
-      body : "I mean it",
-      title : "Made an interesting question about integration",
-      tags : ["Calculus"],
-      author : "William Saffery",
-      datePosted : new Date('December 17, 2014')
+
+  const [posts, setPosts] = useState([]);
+
+  // const [posts, setPosts] = useState([
+  //   {
+  //     body : "This is a test post body",
+  //     title : "This is a test post title",
+  //     tags : ["Trigonometry", "Algebra"],
+  //     author : "math god",
+  //     datePosted : new Date('December 17, 2013')
+  //   },
+  //   {
+  //     body : "I mean it",
+  //     title : "Made an interesting question about integration",
+  //     tags : ["Calculus"],
+  //     author : "William Saffery",
+  //     datePosted : new Date('December 17, 2014')
+  //   }
+  // ])
+
+  const getPosts = async () => {
+    let {data, error} = await supabase
+      .from("posts")
+    if (data) {
+      setPosts(data)
+      setFilteredPosts(data);
     }
-  ])
-
-  // const getPost = async () => {
-  //   const testQuery = await supabase
-  //     .from("Posts")
-  //     .select()
-  //     .single()
-  //   const testPost = testQuery.body
-  //   //setPosts([...posts, testPost])
-  // }
-
-  //getPost();
+    console.log(data)
+    console.log(posts);
+    
+  }
 
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState("");
 
 
-  const addPost = (postBody, postTags, postTitle, postAuthor) => {
-    setPosts([...posts, {
-      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
-    }]);
-    setFilteredPosts([...posts, {
-      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
-    }]);
+  const addPost = async (postBody, postTags, postTitle, postAuthor) => {
+    const {data, error} = await supabase
+      .from('posts')
+      .insert([
+        {title: postTitle, body: postBody, tags: postTags, author: postAuthor}
+      ])
+    getPosts();
   }
 
   const handleQueryChange = (e) => {

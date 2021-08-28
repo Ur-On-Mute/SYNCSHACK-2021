@@ -45,7 +45,7 @@ const PostPage = (props) => {
                         )) : <br/>}
                     </div>
                     <div style={{textAlign: 'right'}}>
-                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted.toLocaleDateString()}</p>
+                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted}</p>
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <Quiz> </Quiz>
@@ -55,8 +55,9 @@ const PostPage = (props) => {
             {!newCommentFlag &&
                 <button style={{width: '8%', marginLeft: '8%', marginTop: '3%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(true))}>Post Comment</button>
             }
+            {newCommentFlag && <button style={{width: '10%', marginLeft: '8%', marginTop: '3%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(false))}>Cancel Comment</button>}
             {newCommentFlag && <CommentEditor addComment={addComment}/>}
-            {newCommentFlag && <button style={{width: '10%', marginLeft: '8%', marginTop: '0%', position: 'static'}} className='btn btn-danger create-post' onClick={() => (handleCommentDisplay(false))}>Cancel Comment</button>}
+            
             <div className="comments">
                 {comments.map((comment) => (
                     <Comment author={comment.author} commentBody={comment.body} datePosted={comment.datePosted}/>

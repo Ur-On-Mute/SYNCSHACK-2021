@@ -18,7 +18,7 @@ export default function Post(props) {
                         )) : <br/>}
                     </div>
                     <div style={{textAlign: 'right'}}>
-                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted.toLocaleDateString()}</p>
+                        <p style={{display: 'inline-block', float: 'right', color: 'black'}}>{props.datePosted}</p>
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Carousel from 'react-bootstrap/Carousel'
 import Center from './Center.js';
 import {addStyles, EditableMathField, StaticMathField} from 'react-mathquill';
@@ -7,40 +7,73 @@ import evaluatex from 'evaluatex/dist/evaluatex';
 
 addStyles()
 
-var components = {};
+const variablesContext = React.createContext({
+    x: 1
+});
 
-const EditableMathExample = ({init}) => {
-    const [latex, setLatex] = useState(init)
-  
+var Components = {};
+
+const EditableMathExample = ({init, name}) => {
+    const envContext = useContext(variablesContext);
     return (
         <EditableMathField
-          latex={latex}
+          latex={envContext[name]}
           onChange={(mathField) => {
-            setLatex(mathField.latex())
+            envContext["set"+name.toUpperCase()](mathField.latex());
           }}
         />
     )
-  }
+}
 
-components.MathField = EditableMathExample;
+Components.MathField = EditableMathExample;
+
+function WidthConstrainer({width, children}){
+    return <div style={{width: width}}>
+        {children}
+    </div>
+}
+
+Components.WidthConstrainer = WidthConstrainer
+
+function SidePanel({children}){
+    return <div style={{flex: "1", "backgroundColor": "#ddd"}}>
+        {children}
+    </div>
+}
+Components.SidePanel = SidePanel
+
+function MainPanel({children}){
+    return <div style={{flex: "2"}}>
+        {children}
+    </div>
+}
+Components.MainPanel = MainPanel
 
 function Question({children}){
-    return <Center>
-        <div style={{width: "100%", "background-color": "#fff", "height": "100%"}}>
-        {children}
-        </div>
-    </Center>
+    const [a, setA] = useState(0);
+    const [b, setB] = useState(0);
+    const [c, setC] = useState(0);
+    const [f, setF] = useState();
+    const [g, setG] = useState();
+    const [h, setH] = useState();
+    return <variablesContext.Provider value={{a,b,c,f,g,h, setA, setB, setC, setF, setG, setH}}>
+            <Center>
+            <div style={{width: "100%", "background-color": "#fff", "height": "100%", "display": "flex", "flex-direction": "row"}}>
+            {children}
+            </div>
+        </Center>
+    </variablesContext.Provider>
 }
-components.Question = Question;
+Components.Question = Question;
 
-components.Graph = ({children, width, height, scale, center})=><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
+Components.Graph = ({children, width, height, scale, center})=><svg width={width} height={height}xmlns="http://www.w3.org/2000/svg">
     <defs>
         <pattern id="smallGrid" width={scale/2.5} height={scale/2.5} patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="0.1"/>
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="0"/>
         </pattern>
         <pattern id="grid" width={scale*2} height={scale*2} patternUnits="userSpaceOnUse">
             <rect width={scale*2} height={scale*2} fill="url(#smallGrid)"/>
-            <path d={"M "+scale*2+" 0 L 0 0 0 "+scale*2} fill="none" stroke="gray" stroke-width="0.5"/>
+            <path d={"M "+scale*2+" 0 L 0 0 0 "+scale*2} fill="none" stroke="gray" stroke-width="0"/>
         </pattern>
     </defs>
     {children}
@@ -52,69 +85,151 @@ components.Graph = ({children, width, height, scale, center})=><svg width={width
     <rect width="50%" height="50%" fill="url(#grid)" y="50%" />
 </svg>;
 
-components.Line = ({x1, y1, x2, y2})=><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black"></line>;
+Components.Line = ({x1, y1, x2, y2})=><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black"></line>;
 
-components.FunctionLine = ({f, scale, elements, variables})=>{
-    <p>{variables.m}</p>
-    var e = parseInt(elements);
-    var s = parseInt(scale);
-    var fn = evaluatex(f);
-    var list = Array.from(Array(parseInt(elements)).keys()).map((i)=>{
-        return (i/e*s + "," + (200-fn({x: i/s})));
-    });
-    return <path d={"M0,0 C"+list.join(" ")} fill="none" stroke="black"/>
-};
-
-components.FunctionDots = ({f, scale, width, cx, cy, color, resolution, begin})=>{
+function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}){
+    const envContext = useContext(variablesContext);
     try{
     cx = cx || 0;
     cy = cy || 0;
-    var e = parseInt(width);
-    var s = parseInt(scale);
-    var r = parseInt(resolution);
-    var b = parseInt(begin || "0") || 0;
+    if (!f){
+        f = envContext[fName];
+    }
+    var e = parseFloat(width);
+    var s = parseFloat(scale);
+    var r = parseFloat(resolution);
+    var b = parseFloat(begin || "0") || 0;
     var fn = evaluatex(f);
     return <>
-        {Array.from(Array(parseInt(e*resolution*2)).keys()).map((i)=>{
+        {<path d={"M"+(Array.from(Array(parseFloat(e*resolution*2)).keys()).map((i)=>{
             const m=(i+b)/r;
-            return <circle key={i} cx={parseInt(cx)+(m*s)} cy={parseInt(cy)-(s*fn({x: m, e: 2.718}))} r="3" fill={color || "black"}/>;
+            return parseFloat(cx)+(m*s) + "," + (parseFloat(cy)-(s*fn({x: m, e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c})))
+            //return <circle key={i} cx={parseInt(cx)+(m*s)} cy={parseInt(cy)-(s*fn({x: m, e: 2.718}))} r="3" fill={color || "black"}/>;
+        }).join(" "))+""} fill="none" stroke={color} stroke-width="3"/>};
+    </>;
+    }catch(exception){
+        return <p>ERROR</p>
+    }
+}
+Components.FunctionLine = FunctionLine;
+
+function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    if (!f){
+        f = envContext[fName];
+    }
+    var e = parseFloat(width);
+    var s = parseFloat(scale);
+    var r = parseFloat(resolution);
+    var b = parseFloat(begin || "0") || 0;
+    var fn = evaluatex(f);
+    return <>
+        {Array.from(Array(parseFloat(e*resolution*2)).keys()).map((i)=>{
+            const m=(i+b)/r;
+            return <circle key={i} cx={parseFloat(cx)+(m*s)} cy={parseFloat(cy)-(s*fn({x: m, e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c}))} r="3" fill={color || "black"}/>;
         })};
     </>;
     }catch(exception){
         return <p>ERROR</p>
     }
 }
+Components.FunctionDots = FunctionDots
 
-components.n = ()=><br/>;
+Components.n = ()=><br/>;
 
-components.Latex = ({val})=><StaticMathField>{val}</StaticMathField>;
+Components.Latex = ({val})=><StaticMathField>{val}</StaticMathField>;
 
-components.h3 = function({children}){
+Components.h3 = function({children}){
     return <h3>{children}</h3>
 }
-components.div = function({children}){
+Components.div = function({children}){
     return <div>{children}</div>
 }
 
-components.ShowVar = function({val, superState}){
-    <p>{superState[val]}</p>;
+function ShowVar({val}){
+    const variables = useContext(variablesContext);
+    return <>{variables[val]}</>;
 };
 
-export default components;
-/*
-{
-    'QuestionScope': ()=>{
+Components.ShowVar = ShowVar
 
+function Incrementer({val}){
+    const variables = useContext(variablesContext);
+    return <button onClick={()=>{
+        variables["set"+val.toUpperCase()](variables[val]+1)
+    }}
+    />;
+};
+
+Components.Incrementer = Incrementer
+
+
+function VariableSlider({val, minValue, maxValue}){
+    const variables = useContext(variablesContext);
+    maxValue = (parseFloat(maxValue));
+    if (!maxValue){
+        maxValue = 1;
+    };
+    minValue = parseFloat(minValue);
+    if (!minValue){
+        minValue = 0;
+    };
+    return <div class="slidecontainer">
+        <input type="range" min="0" max="1000" value={(variables[val]-minValue)*1000/(maxValue-minValue)} onChange={(e)=>{
+            variables["set"+val.toUpperCase()](e.target.value/1000*(maxValue-minValue)+minValue);
+        }} class="slider" id="myRange"/>
+    </div>;
+}
+Components.VariableSlider = VariableSlider
+
+function DotObject({scale, cx, cy, x, y, color}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    var s = parseFloat(scale);
+    var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    return <circle cx={parseFloat(cx)+s*fx} cy={parseFloat(cy)-s*fy} r="3" fill={color || "black"}/>;
+    }catch(e){
+        return <p>{toString(e)}</p>
     }
-    ,
+}
 
-    /*'XMLText': ({className, children})=><div className={className}>{children}</div>,
-    "Container": ({color, children})=><div style={{"background-color": color}}>{children}</div>,
-    "input": ({children})=><input>{children}</input>,
-    "Circle": ({x, y, r, children})=><svg>
-        <circle cx={parseInt(x)} cy={parseInt(y)} r={parseInt(r)}>{children}</circle>
-    </svg>,
-    "parsererror": ({className, children})=><div className={className}>{children}</div>,
-    "div": ({color, children})=><div style={{"background-color": color}}>{children}</div>,
-    "h3": h3
-  };*/
+Components.DotObject = DotObject
+
+function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    var s = parseFloat(scale);
+    var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    return <image href={imageUrl} x={parseFloat(cx)+s*fx-width/2} y={parseFloat(cy)-s*fy-height/2} height={height} width={width}/>;
+    }catch(e){
+        return <p>{toString(e)}</p>
+    }
+}
+
+Components.ImageObject = ImageObject
+
+function TimeTicker({val, rate}){
+    const variables = useContext(variablesContext);
+    rate = parseFloat(rate);
+    useEffect(()=>{
+        setTimeout(()=>{
+            var newVal = variables[val]+(rate/10);
+            variables["set"+val.toUpperCase()](newVal);
+        }, 100)
+    })
+    return <>
+
+    </>
+}
+Components.TimeTicker = TimeTicker
+
+export default Components;
