@@ -17,10 +17,11 @@ class MetaEq {
 }
 
 class Question {
-  constructor(header, description, metaEq) {
+  constructor(header, description, metaEq, answers_count) {
     this.header = header;
     this.description = description;
     this.metaEq = metaEq;
+    this.answers_count = answers_count;
   }
 }
 
@@ -142,7 +143,7 @@ function QuizQuestion(props) {
 
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
-  let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq())
+  let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq(), 2)
   let questions = [1,2,3].map(testQuestion);
   const [current, setCurrent] = useState(0);
   console.log(questions);
