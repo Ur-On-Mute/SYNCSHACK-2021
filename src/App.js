@@ -59,13 +59,13 @@ export default function App() {
   const [user, setUser] = useState("");
 
 
-  const addPost = (postBody, postTags, postTitle, postAuthor) => {
-    setPosts([...posts, {
-      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
-    }]);
-    setFilteredPosts([...posts, {
-      body : postBody, tags : postTags, title : postTitle, author : postAuthor, datePosted : new Date()
-    }]);
+  const addPost = async (postBody, postTags, postTitle, postAuthor) => {
+    const {data, error} = await supabase
+      .from('posts')
+      .insert([
+        {title: postTitle, body: postBody, tags: postTags, author: postAuthor}
+      ])
+    getPosts();
   }
 
   const handleQueryChange = (e) => {
