@@ -85,7 +85,21 @@ Components.Graph = ({children, width, height, scale, center})=><svg width={width
     <rect width="50%" height="50%" fill="url(#grid)" y="50%" />
 </svg>;
 
-Components.Line = ({x1, y1, x2, y2})=><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black"></line>;
+var inContext = (k, envContext)=>{
+    return evaluatex(k)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+}
+
+function Line({cx, cy, scale, x1, y1, x2, y2}){
+    try{
+    const envContext = useContext(variablesContext);
+    const s = parseFloat(scale);
+    return <line x1={parseFloat(cx)+inContext(x1,evaluatex)*s} y1={parseFloat(cy)-inContext(y1,evaluatex)*s} x2={parseFloat(cx)+inContext(x2,evaluatex)*s} y2={parseFloat(cy)-inContext(y2,evaluatex)*s} stroke="black" stroke-width="2px"/>;
+    }catch(e){
+        return <p>{toString(e)}</p>
+    }
+};
+
+Components.Line = Line
 
 function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}){
     const envContext = useContext(variablesContext);
@@ -214,8 +228,22 @@ function ImageObject({scale, cx, cy, x, y, imageUrl, height, width}){
         return <p>{toString(e)}</p>
     }
 }
-
 Components.ImageObject = ImageObject
+
+function TextObject({scale, cx, cy, x, y, txt}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    var s = parseFloat(scale);
+    var fx = evaluatex(x)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    var fy = evaluatex(y)({e: 2.718, a:envContext.a, b:envContext.b, c:envContext.c});
+    return <text x={parseFloat(cx)+s*fx} y={parseFloat(cy)-s*fy}>{txt}</text>;
+    }catch(e){
+        return <p>{toString(e)}</p>
+    }
+}
+Components.TextObject = TextObject
 
 function TimeTicker({val, rate}){
     const variables = useContext(variablesContext);
