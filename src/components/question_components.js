@@ -15,6 +15,9 @@ var Components = {};
 
 const EditableMathExample = ({init, name}) => {
     const envContext = useContext(variablesContext);
+    useEffect(()=>{
+        envContext["set"+name.toUpperCase()](init);
+    },[])
     return (
         <EditableMathField
           latex={envContext[name]}
@@ -58,7 +61,20 @@ function Question({children}){
     const [f, setF] = useState();
     const [g, setG] = useState();
     const [h, setH] = useState();
-    return <variablesContext.Provider value={{a,b,c,f,g,h, setA, setB, setC, setF, setG, setH}}>
+
+    const [f1, setF1] = useState();
+    const [f2, setF2] = useState();
+    const [f3, setF3] = useState();
+    const [f4, setF4] = useState();
+    const [f5, setF5] = useState();
+    const [f6, setF6] = useState();
+    const [f7, setF7] = useState();
+    const [f8, setF8] = useState();
+    const [f9, setF9] = useState();
+    const [f10, setF10] = useState();
+
+
+    return <variablesContext.Provider value={{a,b,c,f,g,h, setA, setB, setC, setF, setG, setH, f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,setF1,setF2,setF3,setF4,setF5,setF6,setF7,setF8,setF9,setF10}}>
             <Center>
             <div style={{width: "100%", "background-color": "#fff", "height": "100%", "display": "flex", "flex-direction": "row"}}>
             {children}
@@ -130,6 +146,36 @@ function FunctionLine({fName, f, scale, width, cx, cy, color, resolution, begin}
 }
 
 Components.FunctionLine = FunctionLine;
+
+function RiemannSquares({fName, f, scale, width, cx, cy, color, squares, begin}){
+    const envContext = useContext(variablesContext);
+    try{
+    cx = cx || 0;
+    cy = cy || 0;
+    if (fName){
+        f = envContext[fName];
+    }
+    var e = parseFloat(width);
+    var s = parseFloat(scale);
+    var b = parseFloat(begin || "0") || 0;
+    var fn = evaluatex(f);
+    return <>
+        {Array.from(Array(parseFloat(squares)).keys()).map((i)=>{
+            const m=((i/squares * width)+b);
+            var h=s*fn({x: m});
+            if (h<0){
+                return <rect width={(width/squares * s)-1} height={-h} x={parseFloat(cx) + s*m} y={parseFloat(cy)} style={{fill:color}}></rect>
+            }
+            return <rect width={(width/squares * s)-1} height={h} x={parseFloat(cx) + s*m} y={parseFloat(cy)-h} style={{fill:color}}></rect>
+            })
+        };
+    </>;
+    }catch(exception){
+        return <p>ERROR</p>
+    }
+}
+
+Components.RiemannSquares = RiemannSquares;
 
 function FunctionDots({fName, f, scale, width, cx, cy, color, resolution, begin}){
     const envContext = useContext(variablesContext);
@@ -268,5 +314,10 @@ function TimeTicker({val, rate}){
     </>
 }
 Components.TimeTicker = TimeTicker
+
+function Title({children}){
+    return <><br/><p style={{width: "100%", "font-weight": "bold", textAlign: "center", "font-size": "20px"}}>{children}</p></>
+}
+Components.Title = Title
 
 export default Components;
