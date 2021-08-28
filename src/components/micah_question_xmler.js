@@ -9,7 +9,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 const parser = new DOMParser();
 
-function processChildren (children, variable_values, set_variable_values) {
+function processChildren (children, passthroughattributes, superState, setSuperState) {
   return Array.from(children.length ? children : []).map(
     (node, i) => {
       // return if text node
@@ -24,11 +24,16 @@ function processChildren (children, variable_values, set_variable_values) {
       // create React component
       if (question_components[node.nodeName]!=null) {
         return React.createElement(question_components[node.nodeName], {
+          ...passthroughattributes,
           ...attributes,
-          variable_values: variable_values,
-          set_variable_values: set_variable_values,
+          superState: superState,
+          setSuperState: setSuperState,
           key: i
-        }, processChildren(node.childNodes, variable_values, set_variable_values));
+        }, processChildren(node.childNodes,{
+          scale: attributes.scale, 
+          cy: (attributes.height || 0)/2,
+          cx: (attributes.width || 0)/2,
+        }, superState, setSuperState));
       }else{
         return <p style={{color: "red"}}>invalid component "{node.nodeName}"</p>
       }
@@ -37,27 +42,26 @@ function processChildren (children, variable_values, set_variable_values) {
 
 function App() {
   const [XML, setXML] = useState(`
-    <XMLText class="yeah-attributes">
-      regular text
-      another texta
-    </XMLText>
+  <Question>
+
+  </Question>
   `);
   const xmlDoc = parser.parseFromString(XML, 'text/xml');
   const onXMLUpdate = (e)=>{
     const val = e.target.value;
     setXML(val);
   };
-  var [variable_values, set_variable_values] = useState({});
+  const [superState, setSuperState] = useState({m: 7});
   return (
     <div className="App">
       <header className="App-header">
         <hr/><hr/>
-        <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80%", height: "100%"}}>
+        <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80em", height: "100%"}}>
           <br/>
-          <textarea onChange={onXMLUpdate} style={{flex:1, height: "400px"}} wrap="soft"/>
-          <div style={{flex:1}}>
+          <textarea value={XML} onChange={onXMLUpdate} style={{flex:1, height: "400px"}} wrap="soft"/>
+          <div style={{flex:2}}>
             {
-              processChildren(Array.from(xmlDoc.childNodes), variable_values, set_variable_values)
+              processChildren(Array.from(xmlDoc.childNodes), {}, superState, setSuperState)
             }
           </div>
         </div>
