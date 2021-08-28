@@ -89,10 +89,10 @@ function QuizQuestion(props) {
       console.log(evaluatex(answer,{}, { latex: true })());
       const out = q({"x":evaluatex(answer, { latex: true })()});
       if (out == right) {
-        console.log("Hurrrahh!")
+        props.push();
       }
-      setVariant(((out == right) ? 'danger': 'success'))
-      // new Promise(resolve => setTimeout(() => setVariant("secondary"), 3))
+      setVariant(((out == right) ? 'success': 'danger'))
+      new Promise(resolve => {setTimeout(() => setVariant("secondary"), 300)})
       console.log(out);
   }
 
@@ -126,33 +126,29 @@ function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
   let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq())
   let questions = [1,2,3].map(testQuestion);
-  console.log(questions)
+  const [current, setCurrent] = useState(0);
+  console.log(questions);
+  function push() {
+    setCurrent(current+1);
+    if (current > questions.length-1) {
+      setCurrent(0)
+    }
+  }
+  // const push = () => setCurrent(current+1);
   // let questions = [{header:"Q1", description:"Solve the following quadratic", metaEq:testMetaEq()},{header:"Q2", metaEq:testMetaEq()},{header:"Q3", metaEq:testMetaEq()}]
   return(
-  <Center>
+  <>
+  <Center height="15em">
   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
-    <Slides width="30em" height="15em" total={3}>
+    <Slides width="30em" height="15em" total={questions.length} current={current}>
     {questions.map(q => (
-      <QuizQuestion {...q}/>
+      <QuizQuestion {...q} push={push}/>
     ))}
     </Slides>
   </div>
   </Center>
+  </>
 );
-
-// return(
-//   <Center>
-//   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
-//     <Carousel variant="dark" interval={null}>
-//     {questions.map(q => (
-//       <Carousel.Item>
-//       <QuizQuestion {...q}/>
-//       </Carousel.Item>
-//     ))}
-//     </Carousel>
-//   </div>
-//   </Center>
-// );
 
 }
 

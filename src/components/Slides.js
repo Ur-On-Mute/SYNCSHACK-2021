@@ -13,33 +13,35 @@ function Slide(props) {
 
 
 function Slides(props) {
-  const [current, setCurrent] = useState(0)
+  // const [current, setCurrent] = useState(props.current)
   const {children, width, height} = props
   const slidesRef = useRef(null)
   const size = Number(props.width.replace(/\D/g, ""))
 
-  function next() {
-    setCurrent(current+1);
-    if (current >= props.total-1) {
-      setCurrent(0);
-    }
-  }
-  function goto(n) {
-    setCurrent(n);
-  }
+ //  function next() {
+ //    setCurrent(current+1);
+ //    if (current >= props.total-1) {
+ //      setCurrent(0);
+ //    }
+ //  }
+ //
+ //  useEffect(() => {
+ //    setCurrent(props.current)
+ // }, [props.current])
 
   useEffect(() => {
   if (slidesRef == null) return;
    slidesRef.current.style.transition = 'all 0.2s ease-in-out'
-   slidesRef.current.style.transform = `translateX(-${current*size}em)`
+   slidesRef.current.style.transform = `translateX(-${props.current*size}em)`
    // slidesRef.current.style.transform = `translateX(-${current*Number(props.width)}em)`
-  }, [current])
+ }, [props.current])
 
   return (
     <>
-    <div className="slide-wrapper">
-    <div className="slide-subwrapper" ref={slidesRef}
-    width={props.width} height={props.height}>
+    <div className="slide-wrapper"
+    style={{width: `${props.width}`, height: `${props.height}`}}
+    >
+    <div className="slide-subwrapper" ref={slidesRef}>
     {children.map(c => (
       <Slide width={props.width} height={props.height}>
        {c}
@@ -47,8 +49,6 @@ function Slides(props) {
     ))}
     </div>
     </div>
-    <button onClick={()=>next()}>
-    </button>
     </>
   )
 }
