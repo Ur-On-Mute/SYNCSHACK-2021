@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import Center from './Center.js';
 import {addStyles, EditableMathField, StaticMathField} from 'react-mathquill';
 import evaluatex from 'evaluatex/dist/evaluatex';
+import {Quiz, AlgebraQuestionWrapper} from './Quiz';
 
 addStyles()
 
@@ -12,6 +13,9 @@ const variablesContext = React.createContext({
 });
 
 var Components = {};
+
+Components.Quiz = Quiz;
+Components.AlgebraQuestionWrapper = AlgebraQuestionWrapper;
 
 const EditableMathExample = ({init, name}) => {
     const envContext = useContext(variablesContext);

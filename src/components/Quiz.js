@@ -29,37 +29,6 @@ class Question {
   }
 }
 
-function Equation(props){
-  function getRandomInt(min, max) {
-    return min + Math.floor(Math.random() * (max-min));
-  }
-  const [equation_string, setEq] = useState();
-
-  useEffect(() => {
-    setEq(generate(props.metaEq));
-  }, [props.metaEq])
-
-  function generate(metaEq) {
-    if (metaEq == null) {return;}
-    console.log(metaEq)
-    var left = metaEq.LHS;
-    var right = metaEq.RHS;
-    const constants = metaEq.constants;
-    const constant_ranges = metaEq.constant_ranges;
-    var constant_vals = {};
-    for (var i = 0; i < constants.length; i++) {
-      const rand_val = getRandomInt(0, constant_ranges[i]);
-      constant_vals[constants[i]] = rand_val;
-      left = left.replace(constants[i], rand_val);
-      right = right.replace(constants[i], rand_val);
-    }
-    metaEq.constant_vals = constant_vals;
-    return [left,right].join(" = ");
-  }
-
-  return ( <StaticMathField>{equation_string}</StaticMathField>)
-}
-
 function AnswerBox(props) {
   const [latex, setLatex] = useState("Answer")
 
@@ -70,24 +39,119 @@ function AnswerBox(props) {
     /> )
 }
 
-function QuizQuestion(props) {
-  const [buttonVariant, setVariant] = useState("secondary");
-  // const [answer, setAnswer] = useState(null);
-  const answerButtonRef = useRef(null)
-  const addAnswerRef = useRef(null)
-  const [metaEq, setMetaEq] = useState(props.metaEq);
-  const [answers, setAnswer] = useState([])
-  const [answersAmount, setAmount] = useState(1);
+function Equation(props){
+  function getRandomInt(min, max) {
+    return min + Math.floor(Math.random() * (max-min));
+  }
+  const [equation, setEq] = useState([props.LHS, props.RHS]);
+  const [answers, setAnswers] = useState();
+  // const [props, setprops] = useState({props.LHS});
+  const [constantVals, setConstantVals] = useState(props.constantVals);
+
+  useEffect(() => setAnswers(props.answers), [props.answers])
+  useEffect(() => setConstantVals(props.constantVals), [props.constantVals])
 
   useEffect(() => {
-    setMetaEq(props.metaEq);
-  }, [props.metaEq])
+    console.log(equation)
+    console.log([props.LHS, props.RHS])
+    const [left, right] = equation
+    if (left == props.LHS && right == props.RHS) {
+      setEq(generate());
+    }
+  }, [])
+  //
+  useEffect(() => {
+    if (props.check) {
+      check();
+      props.setCheck(false);
+    }
+  }, [props.check])
+
+  function generate() {
+    if (props == null) {return;}
+    console.log("generate", props)
+    var left = props.LHS;
+    var right = props.RHS;
+    const constants = props.constants;
+    const constant_ranges = props.constant_ranges;
+    var newConstantVals = {};
+    for (var i = 0; i < constants.length; i++) {
+      const rand_val = getRandomInt(0, constant_ranges[i]);
+      newConstantVals[constants[i]] = rand_val;
+      left = left.replace(constants[i], rand_val);
+      right = right.replace(constants[i], rand_val);
+    }
+    props.setConstantVals(newConstantVals);
+    return [left,right];
+  }
+
+  function check() {
+      if (answers == null || props == null || answers.length == 0) {return;}
+      console.log(props.constant_vals);
+      const [left,right] = equation;
+      console.log(left, right);
+      var out = [];
+      try {
+        const q = evaluatex(left);
+        answers.forEach((a) => {
+          const i = evaluatex(a,{}, { latex: true })()
+          out.push(q({"x":i}));
+        });
+      }
+      catch (error) {
+        console.error(error);
+        props.setVariant("warning")
+      }
+      if (out == null) {
+        props.setVariant("warning")
+      }
+      else {
+        console.log("answers", answers, answers.length)
+        var correct = true;
+        if (answers.length < props.answers_count) {
+            console.log(props.answers_count)
+            correct = false;
+        }
+        else {
+          for (var o=0; o<out.length; o++) {
+            console.log(Number(out[o].toFixed(3)))
+            if (Number(out[o].toFixed(3)) != right) {
+              correct = false;
+            }
+          }
+        }
+        props.setVariant(correct?'success':'danger')
+        asyncTime(() => props.push(correct), 400)
+      }
+      asyncTime(() => props.setVariant("secondary"), 300)
+  }
+
+  return ( <StaticMathField>{equation!=null?equation.join(" = "):"None"}</StaticMathField>)
+}
+
+function QuizQuestion(props) {
+  // const [buttonVariant, setVariant] = useState("secondary");
+
+  const answerButtonRef = useRef(null)
+  const addAnswerRef = useRef(null)
+  const [answers, setAnswer] = [props.answers, props.setAnswer]
+  const [answersAmount, setAmount] = useState(1);
+
+  const check = () => {
+    props.setCheck(true)
+  }
+
+  // useEffect(() => {
+  //   setMetaEq(props.metaEq);
+  // }, [props.metaEq])
 
   function minusAnswer() {
     if (addAnswerRef == null) {return;}
     if (answersAmount-1 > 0){
       setAmount(answersAmount-1)
-      answers.pop()
+      var n_answers = answers
+      n_answers.pop()
+      setAnswer(n_answers)
     }
   }
 
@@ -106,58 +170,6 @@ function QuizQuestion(props) {
     console.log(answers)
   }
 
-
-  function regenerate(metaEq) {
-    var [left, right] = [metaEq.LHS, metaEq.RHS]
-    for (const [key, value] of Object.entries(metaEq.constant_vals)) {
-      //console.log(`${key}: ${value}`);
-      left = left.replace(key, value)
-      right = right.replace(key, value)
-    }
-    return [left,right]
-  }
-
-  function check() {
-      if (answers == null || metaEq == null || answers.length == 0) {return;}
-      console.log(metaEq.constant_vals);
-      const [left,right] = regenerate(metaEq);
-      console.log(left, right);
-      var out = [];
-      try {
-        const q = evaluatex(left);
-        answers.forEach((a) => {
-          const i = evaluatex(a,{}, { latex: true })()
-          out.push(q({"x":i}));
-        });
-      }
-      catch (error) {
-        console.error(error);
-        setVariant("warning")
-      }
-      if (out == null) {
-        setVariant("warning")
-      }
-      else {
-        console.log("answers", answers, answers.length)
-        var correct = true;
-        if (answers.length < metaEq.answers_count) {
-            console.log(metaEq.answers_count)
-            correct = false;
-        }
-        else {
-          for (var o=0; o<out.length; o++) {
-            console.log(Number(out[o].toFixed(3)))
-            if (Number(out[o].toFixed(3)) != right) {
-              correct = false;
-            }
-          }
-        }
-        setVariant(correct?'success':'danger')
-        asyncTime(() => props.push(correct), 400)
-      }
-      asyncTime(() => setVariant("secondary"), 300)
-  }
-
   function fixButton(buttonRef) {
     if (buttonRef==null) {return;}
     buttonRef.current.blur()
@@ -168,7 +180,7 @@ function QuizQuestion(props) {
         <div style={{textAlign: "center", marginTop:"1%"}}>
         <h3>{props.header}</h3>
         <p>{props.description}</p>
-        <Equation metaEq={props.metaEq}> </Equation>
+        {props.children}
         <br/>
         </div>
         <div  style={{textAlign: "center", marginTop:"6%",marginBottom:"2%"}}>
@@ -187,15 +199,43 @@ function QuizQuestion(props) {
         </Center>
         <Center>
 
-        <Button style={{marginTop:"3%"}} size="lg" variant={buttonVariant} ref={answerButtonRef} onClick={() => {fixButton(answerButtonRef);check();}}>
+        <Button style={{marginTop:"3%"}} size="lg" variant={props.buttonVariant} ref={answerButtonRef} onClick={() => {fixButton(answerButtonRef);check();}}>
         </Button>
-        <Button style={{marginTop:"3%"}} variant={buttonVariant} onClick={() => props.push()}>{"tester"}</Button>
-        <p>{props.correctAnswers}</p>
         </Center>
         </div>
     </div>
   )
 }//
+
+function AlgebraQuestionWrapper(props) {
+  return(
+    <QuizQuestion
+      header={props.header}
+      description={props.description}
+      check={props.check}
+      setCheck={props.setCheck}
+      answers={props.answers}
+      setAnswer={props.setAnswer}
+      correctAnswers={props.correctAnswers}
+      answers_count={props.answers_count}
+      buttonVariant={props.buttonVariant}
+      >
+      <Equation
+        LHS={props.LHS}
+        RHS={props.RHS}
+        constants={props.constants}
+        constant_ranges={props.constant_ranges}
+        answers={props.answers}
+        check={props.check}
+        setCheck={props.setCheck}
+        push={props.push}
+        constantVals={props.constantVals}
+        setConstantVals={props.setConstantVals}
+        setVariant={props.setVariant}>
+      </Equation>
+    </QuizQuestion>
+  )
+}
 
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
@@ -204,6 +244,11 @@ function Quiz(props) {
   const [questions, setQuestions] = useState([1,2,3].map(testQuestion));
   const [current, setCurrent] = useState(0);
   const [correctAnswers, setCorrect] = useState(0);
+  const [constantVals, setConstantVals] = useState(null);
+  const [answers, setAnswer] = useState([]);
+  const [check, setCheck] = useState(false);
+  const [buttonVariant, setVariant] = useState("secondary");
+
   console.log(questions);
   function push(correct) {
     let newQuestions = questions;
@@ -228,17 +273,64 @@ function Quiz(props) {
   <div style={{marginBottom: "2em"}}>
   <Center height="15em">
   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
+
     <Slides width="30em" height="15em" total={questions.length} current={current}>
-    {questions.map(q => (
-      <QuizQuestion {...q} push={push} correctAnswers={correctAnswers}/>
-    ))}
+      {props.children}
     </Slides>
+    <p style={{textAlign: "center"}}>{correctAnswers}</p>
   </div>
   </Center>
+  <br/>
   </div>
 );
 
+function QuizWrapper(props) {
+  return (
+    <Quiz>
+      {React.Children.map(props.children, (c) => {
+        <AlgebraQuestionWrapper
+          header={c.header} description={c.description}  answers_count={c.answers_count}
+          LHS={c.LHS} RHS={c.RHS} constants={c.constants} constant_ranges={c.constant_range}
+          check={check} setCheck={setCheck} answers={answers} setAnswer={setAnswer} correctAnswers={correctAnswers} push={push} constantVals={constantVals} setConstantVals={setConstantVals} buttonVariant={buttonVariant} setVariant={setVariant}
+        />
+      })}
+      {props.children}
+    </Quiz>
+  )
 }
 
+// <QuizQuestion header="Q3" description="Solve the following quadratic"  correctAnswers={correctAnswers} answers_count={2}>
+//   <Equation metaEq={new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])} push={push} constantVals={constantVals} setConstantVals={setConstantVals}> </Equation>
+// </QuizQuestion>
 
-export default Quiz;
+}
+
+// <QuizQuestion
+//   header="Q1"
+//   description="Solve the following quadratic"
+//   check={check}
+//   setCheck={setCheck}
+//   answers={answers}
+//   setAnswer={setAnswer}
+//   correctAnswers={correctAnswers}
+//   answers_count={2}
+//   buttonVariant={buttonVariant}
+//   >
+//   <Equation
+//     metaEq={new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])}
+//     LHS={"Ax^2+Bx+C"}
+//     RHS={"D"}
+//     constants={["A","B","C","D"]}
+//     constant_ranges={[10,50,30,30]}
+//     answers={answers}
+//     check={check}
+//     setCheck={setCheck}
+//     push={push}
+//     constantVals={constantVals}
+//     setConstantVals={setConstantVals}
+//     setVariant={setVariant}>
+//   </Equation>
+// </QuizQuestion>
+
+
+export {Quiz, AlgebraQuestionWrapper};

@@ -6,11 +6,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState, useEffect} from 'react';
 import ForumHeader from './components/ForumHeader';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import Quiz from './components/Quiz.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { addStyles } from 'react-mathquill';
 import LoginPage from './components/LoginPage';
 import {supabase} from './supabaseClient.js'
+import {Quiz, AlgebraQuestionWrapper} from './components/Quiz';
 require('dotenv').config();
 
 export default function App() {
