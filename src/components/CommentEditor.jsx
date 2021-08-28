@@ -24,7 +24,7 @@ export default function CommentEditor(props) {
                                 <textarea id = "comment-body-input" className="col-sm-10" onChange={handleCommentBodyChange} placeholder="Comment Description" value={commentBody} required></textarea>
                             </div>
                             <br />
-                            <button className="btn btn-outline-success" type="submit">Submit Post</button>
+                            <button className="btn btn-outline-success" type="submit">Submit Comment</button>
                         </div>
                     </form>
                 </div>
