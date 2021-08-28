@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Carousel from 'react-bootstrap/Carousel'
-import {Button, Form} from 'react-bootstrap';
+import {Button, Form, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
 import evaluatex from 'evaluatex/dist/evaluatex';
 import Center from './Center.js';
 import {EditableMathField, StaticMathField} from 'react-mathquill'
 import Slides from './Slides.js'
+
+function asyncTime(func, time) {
+  new Promise(resolve => {setTimeout(() => func(), time)})
+}
 
 class MetaEq {
   constructor(left, right, constants, constant_ranges) {
@@ -33,7 +37,7 @@ function Equation(props){
 
   useEffect(() => {
     setEq(generate(props.metaEq));
-  }, [])
+  }, [props.metaEq])
 
   function generate(metaEq) {
     if (metaEq == null) {return;}
@@ -68,9 +72,25 @@ function AnswerBox(props) {
 function QuizQuestion(props) {
   const [buttonVariant, setVariant] = useState("secondary");
   const [answer, setAnswer] = useState(null);
-  const buttonRef = useRef(null)
+  const answerButtonRef = useRef(null)
+  const addAnswerRef = useRef(null)
   const [metaEq, setMetaEq] = useState(props.metaEq);
+  let answers = []
+  const [answersAmount, setAmount] = useState(1);
 
+  function minusAnswer() {
+    if (addAnswerRef == null) {return;}
+    if (answersAmount-1 > 0){
+      setAmount(answersAmount-1)
+    }
+  }
+
+  function addAnswer() {
+    if (addAnswerRef == null) {return;}
+    if (answersAmount+1 < 10){
+      setAmount(answersAmount+1)
+    }
+  }
 
 
   function regenerate(metaEq) {
@@ -100,22 +120,22 @@ function QuizQuestion(props) {
       catch (error) {
         console.error(error);
         setVariant("warning")
-      }//Number(out.toFixed(3))
-      if (Number(out.toFixed(3)) == right) {
-        // props.push();
-        setVariant('success')
       }
-      else if (out == null) {
+      if (out == null) {
         setVariant("warning")
       }
       else {
-        setVariant('danger')
+        var correct = (Number(out.toFixed(3)) == right)
+        setVariant(correct?'success':'danger')
+        asyncTime(() => props.push(correct), 400)
       }
-      new Promise(resolve => {setTimeout(() => setVariant("secondary"), 300)})
+      asyncTime(() => setVariant("secondary"), 300)
+
+      // props.push(correct);
+      // new Promise(resolve => {setTimeout(() => setVariant("secondary"), 300)})
   }
 
-  function fixButton() {
-    check()
+  function fixButton(buttonRef) {
     if (buttonRef==null) {return;}
     buttonRef.current.blur()
   }
@@ -130,10 +150,21 @@ function QuizQuestion(props) {
         </div>
         <div  style={{textAlign: "center", marginTop:"6%",marginBottom:"2%"}}>
         <Center>
-        <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
+        <ButtonToolbar aria-label="Toolbar with button groups">
+        <ButtonGroup>
+        <Button style={{marginRight:'5%'}} size="lg" variant={"success"} onClick={() => {fixButton();addAnswer();}}></Button>
+        <Center>
+        {[...Array(Math.max(1,answersAmount)).keys()].map(() =>
+          <AnswerBox onChange={(e) => setAnswer(e.latex())}/>
+        )}
+        </Center>
+        <Button style={{marginLeft:'5%'}} size="lg" variant={"danger"} onClick={() => {fixButton();minusAnswer()}}></Button>
+        </ButtonGroup>
+        </ButtonToolbar>
         </Center>
         <Center>
-        <Button style={{marginTop:"3%"}} size="lg" variant={buttonVariant} ref={buttonRef} onClick={() => fixButton()}>
+
+        <Button style={{marginTop:"3%"}} size="lg" variant={buttonVariant} ref={answerButtonRef} onClick={() => {fixButton(answerButtonRef);check();}}>
         </Button>
         </Center>
         </div>
@@ -147,7 +178,13 @@ function Quiz(props) {
   let questions = [1,2,3].map(testQuestion);
   const [current, setCurrent] = useState(0);
   console.log(questions);
-  function push() {
+  function push(correct) {
+    if (!correct) {
+      const redoQuestion = questions[current];
+      redoQuestion.metaEq.constant_vals = null;
+      questions.push(redoQuestion);
+    }
+    questions.splice(current,1)
     setCurrent(current+1);
     if (current >= questions.length-1) {
       setCurrent(0)
