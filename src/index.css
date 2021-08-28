@@ -1,13 +1,113 @@
+html,
 body {
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin-top: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background-color:#141816 !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.posts {
+  width: 70%;
+  margin: 1em 20%;
+  margin-top: 80px;
+}
+
+.post-body {
+  margin-bottom : 20px;
+  box-shadow: 20px 20px #000;
+  transition: 0.1s;
+}
+
+.post-body:hover {
+  margin-top: 25px;
+  margin-bottom : 11px;
+  box-shadow: 20px 14px #000;
+}
+
+.search-bar {
+  margin-top: 20px;
+  font-family: 'Roboto', Arial, sans-serif;
+  padding: 10px;
+  padding-left: 30px;
+  font-size: 22px;
+  max-width : 31.25rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  background-color: #fff;
+  box-shadow: 10px 10px #000;
+}
+
+.create-post {
+  background-color: #300707 !important;
+  border-color: #fff !important;
+  position: fixed;
+  z-index: 1;
+  transition: 1s;
+}
+
+.create-post:hover {
+  margin-top: 10px;
+  position: absolute;
+}
+
+.create-post-page{
+  margin: 5%;
+  padding: 20px;
+  display: inline-block;
+  box-shadow: 20px 20px black;
+}
+
+* {
+  text-decoration: none !important;
+}
+
+.post-form {
+  margin-right: 5em;
+}
+
+.tag-input {
+  padding-left: 0 !important;
+}
+
+.form-group {
+  margin-top: 0px !important;
+}
+
+.question-input {
+  width: 100%;
+}
+.tag-row {
+  margin-top: 25px !important;
+}
+.post-page {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 0%;
+  margin-bottom: 1%;
+}
+
+.comment-body {
+  margin-left: 8%;
+  margin-right: 20%;
+  margin-top: 1%;
+}
+
+.comments {
+  margin-bottom:5%;
 }
