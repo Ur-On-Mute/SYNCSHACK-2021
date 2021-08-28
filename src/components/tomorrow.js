@@ -20,7 +20,7 @@ export default {
   },
   "pre[class*=\"language-\"]": {
     "color": "#ccc",
-    "background": "#2d2d2d",
+    "background": "#05141f",
     "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
     "fontSize": "1em",
     "textAlign": "left",
@@ -41,7 +41,7 @@ export default {
     "overflow": "auto"
   },
   ":not(pre) > code[class*=\"language-\"]": {
-    "background": "#2d2d2d",
+    "background": "#05141f",
     "padding": ".1em",
     "borderRadius": ".3em",
     "whiteSpace": "normal"
