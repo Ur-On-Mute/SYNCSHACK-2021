@@ -9,10 +9,22 @@ function PostEditor(props) {
     const [postTitle, setPostTitle] = useState("");
 
     const options = [
-        {value: 'maths', label: 'Maths'},
-        {value: 'english', label: 'English'},
-        {value: 'science', label: 'Science'},
-        {value: 'history', label: 'History'},
+        {value: 'Calculus', label: 'Calculus'},
+        {value: 'Trigonometry', label: 'Trigonometry'},
+        {value: 'Algebra', label: 'Algebra'},
+        {value: 'Geometry', label: 'Geometry'},
+        {value: 'Year 1', label: 'Year 1'},
+        {value: 'Year 2', label: 'Year 2'},
+        {value: 'Year 3', label: 'Year 3'},
+        {value: 'Year 4', label: 'Year 4'},
+        {value: 'Year 5', label: 'Year 5'},
+        {value: 'Year 6', label: 'Year 6'},
+        {value: 'Year 7', label: 'Year 7'},
+        {value: 'Year 8', label: 'Year 8'},
+        {value: 'Year 9', label: 'Year 9'},
+        {value: 'Year 10', label: 'Year 10'},
+        {value: 'Year 11', label: 'Year 11'},
+        {value: 'Year 12', label: 'Year 12'},
     ]
 
     const createPost = (event) => {

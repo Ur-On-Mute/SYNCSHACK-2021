@@ -16,6 +16,9 @@ class Input extends React.Component {
   changeValue(event) {
     const value = event.target.value;
     this.setState({ value, error: "" });
+    if (this.props.setUser) {
+      this.props.setUser(event.target.value);
+    }
   }
 
   handleKeyPress(event) {
@@ -23,6 +26,8 @@ class Input extends React.Component {
       this.setState({ value: this.props.predicted });
     }
   }
+
+
 
   render() {
     const { active, value, error, label } = this.state;
@@ -32,13 +37,13 @@ class Input extends React.Component {
     } ${locked && !active && "locked"}`;
 
     return (
-      <div className={fieldClassName}>
+      <div className={`${fieldClassName} login-page`}>
         {active && value && predicted && predicted.includes(value) && (
           <p className="predicted">{predicted}</p>
         )}
         <input
           id={1}
-          type="text"
+          type={this.props.type}
           value={value}
           placeholder={label}
           onChange={this.changeValue.bind(this)}
