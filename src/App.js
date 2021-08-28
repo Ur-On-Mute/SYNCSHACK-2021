@@ -1,5 +1,6 @@
 import NavBar from './components/NavBar'
 import Post from './components/Post'
+import PostPage from './components/postPage';
 import PostEditor from './components/create-post';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
@@ -54,6 +55,9 @@ export default function App() {
         <NavBar />
         <Switch>
           <Route path="/create-post" exact render={(props) => <PostEditor {...props} author={user} addPost={addPost}/>}/>
+          {posts.map(post => (
+              <Route path={`/${post.body.replaceAll(' ', '-')}`} exact render={(props) => (<PostPage {...props} postBody={post.body} postTitle={post.title} postAuthor={post.author} datePosted={post.datePosted} postTags={post.tags} user={user}/>)} />
+            ))}
           <div>
             <div style={{width: '50%', margin: 'auto'}} className='d-flex justify-content-center'>
                 <input className='search-bar' onChange={handleQueryChange} value={searchQuery} placeholder="Search..."/>

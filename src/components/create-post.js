@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import Select from 'react-select';
-import NavBar from './NavBar';
 import { Link, withRouter } from 'react-router-dom';
 
 function PostEditor(props) {
@@ -67,7 +66,7 @@ function PostEditor(props) {
                             <br></br>
                             <div className="form-group row">
                                 <label for="post-body-input" className="col-sm-1 col-form-label">Description: </label>
-                                <textarea id = "post-body-input" className="col-sm-10" onChange={handlePostBodyChange} placeholder="Post Description" value={postBody}></textarea>
+                                <textarea id = "post-body-input" className="col-sm-10" onChange={handlePostBodyChange} placeholder="Post Description" value={postBody} required></textarea>
                             </div>
                             <br />
                             <textarea rows="50" className="question-input">PLACEHOLDER FOR QUESTION INPUT</textarea>

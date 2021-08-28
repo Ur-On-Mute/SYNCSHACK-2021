@@ -95,3 +95,15 @@ a {
 .tag-row {
   margin-top: 25px !important;
 }
+.post-page {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 0%;
+  margin-bottom: 1%;
+}
+
+.comment-body {
+  margin-left: 8%;
+  margin-right: 30%;
+  margin-top: 3%;
+}
