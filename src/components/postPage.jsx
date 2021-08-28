@@ -9,6 +9,8 @@ import {
     WYSIWYGEditor,
     SigmaMathRenderer,
   } from "./sigma_math_renderer";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import dark from "./material_dark";
 
 const PostPage = (props) => {
     // const [comments, setComments] = useState([
@@ -22,6 +24,8 @@ const PostPage = (props) => {
     useEffect(() => {
         getComments();
     }, [])
+
+    const [showSource, setShowSource] = useState(false);
 
     const [comments, setComments] = useState([]);
 
@@ -75,6 +79,12 @@ const PostPage = (props) => {
                         )) : <br/>}
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
+                    <button onClick={()=>{setShowSource(!showSource)}}>src</button>
+                    {showSource && 
+                        <SyntaxHighlighter language="xml" style={dark}>
+                            {props.postQuestionBody}
+                        </SyntaxHighlighter>
+                    }
                     <SigmaMathRenderer XML={props.postQuestionBody}/>
                     {/* <Quiz> </Quiz> */}
                 </div>
