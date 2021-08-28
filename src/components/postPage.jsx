@@ -3,7 +3,7 @@ import React from 'react'
 import { useState } from 'react';
 import Comment from './Comment';
 import CommentEditor from './CommentEditor';
-import Quiz from './Quiz';
+import Quiz from './Quiz2';
 
 const PostPage = (props) => {
 

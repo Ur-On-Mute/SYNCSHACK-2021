@@ -1,0 +1,12 @@
+.slide-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.slide-subwrapper {
+  display: flex;
+}
