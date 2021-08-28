@@ -1,11 +1,7 @@
 import React from 'react';
-import {useState, useRef} from 'react';
-import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { validate, parse } from 'fast-xml-parser';
-import reactDom from 'react-dom';
 import question_components from './question_components.js';
-import { Link, withRouter } from 'react-router-dom';
+import ReactPrismEditor from "react-prism-editor";
 
 const parser = new DOMParser();
 
@@ -51,17 +47,23 @@ function SigmaMathRenderer({XML}){
 }
 
 function WYSIWYGEditor({questionBody, setQuestionBody}) {
-  const onXMLUpdate = (e)=>{
-    const val = e.target.value;
-    setQuestionBody(val);
-  };
   return (
     <div className="App">
       <header className="App-header">
         <hr/><hr/>
         <div class="flex-container" style={{"flex-direction": "row", "display": "flex", width: "80em", height: "100%"}}>
           <br/>
-          <textarea className="question-data-input" onChange={console.log} onChange={onXMLUpdate} style={{flex:1, height: "400px"}}/>
+          <div style={{flex:1}}>
+          <ReactPrismEditor
+            language={"xml"}
+            theme={"tomorrow"}
+            code={questionBody}
+            clipboard={true}
+            changeCode={code => {
+              setQuestionBody(code)
+            }}
+          />
+          </div>
           <div className="math-renderer" style={{flex:2}}>
             <SigmaMathRenderer XML={questionBody}/>
           </div>
