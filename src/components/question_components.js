@@ -41,7 +41,7 @@ function WidthConstrainer({width, children}){
 Components.WidthConstrainer = WidthConstrainer
 
 function SidePanel({children}){
-    return <div className="side-panel" style={{flex: "1", "backgroundColor": "#ddd"}}>
+    return <div className="side-panel" style={{"backgroundColor": "#ddd"}}>
         {children}
     </div>
 }
