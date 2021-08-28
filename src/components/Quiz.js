@@ -41,6 +41,7 @@ function Equation(props){
 
   function generate(metaEq) {
     if (metaEq == null) {return;}
+    console.log(metaEq)
     var left = metaEq.LHS;
     var right = metaEq.RHS;
     const constants = metaEq.constants;
@@ -77,6 +78,10 @@ function QuizQuestion(props) {
   const [metaEq, setMetaEq] = useState(props.metaEq);
   const [answers, setAnswer] = useState([])
   const [answersAmount, setAmount] = useState(1);
+
+  useEffect(() => {
+    setMetaEq(props.metaEq);
+  }, [props.metaEq])
 
   function minusAnswer() {
     if (addAnswerRef == null) {return;}
@@ -133,10 +138,18 @@ function QuizQuestion(props) {
         setVariant("warning")
       }
       else {
+        console.log("answers", answers, answers.length)
         var correct = true;
-        for (var o=0; o<out.length; o++) {
-          if (Number(out[o].toFixed(3)) != right) {
-            correct = false
+        if (answers.length < metaEq.answers_count) {
+            console.log(metaEq.answers_count)
+            correct = false;
+        }
+        else {
+          for (var o=0; o<out.length; o++) {
+            console.log(Number(out[o].toFixed(3)))
+            if (Number(out[o].toFixed(3)) != right) {
+              correct = false;
+            }
           }
         }
         setVariant(correct?'success':'danger')
@@ -176,25 +189,36 @@ function QuizQuestion(props) {
 
         <Button style={{marginTop:"3%"}} size="lg" variant={buttonVariant} ref={answerButtonRef} onClick={() => {fixButton(answerButtonRef);check();}}>
         </Button>
+        <Button style={{marginTop:"3%"}} variant={buttonVariant} onClick={() => props.push()}>{"tester"}</Button>
+        <p>{props.correctAnswers}</p>
         </Center>
         </div>
     </div>
   )
-}//<Button style={{marginTop:"3%"}} variant={buttonVariant} ref={buttonRef} onClick={() => props.push()}>{"tester"}</Button>
+}//
 
 function Quiz(props) {
   let testMetaEq = () => new MetaEq("Ax^2+Bx+C","D",["A","B","C","D"], [10,50,30,30])
+  // let testMetaEq = () => new MetaEq("Ax","B",["A","B"], [10,50,10])
   let testQuestion = (x) => new Question(`Q${x}`, "Solve the following quadratic", testMetaEq(), 2)
-  let questions = [1,2,3].map(testQuestion);
+  const [questions, setQuestions] = useState([1,2,3].map(testQuestion));
   const [current, setCurrent] = useState(0);
+  const [correctAnswers, setCorrect] = useState(0);
   console.log(questions);
   function push(correct) {
+    let newQuestions = questions;
     if (!correct) {
       const redoQuestion = questions[current];
-      redoQuestion.metaEq.constant_vals = null;
-      questions.push(redoQuestion);
+      const {constant_vals, ...rest} = questions[current].metaEq
+      redoQuestion.metaEq = new MetaEq(...Object.values(rest));
+      console.log(redoQuestion);
+      newQuestions.push(redoQuestion);
     }
-    questions.splice(current,1)
+    else {
+      setCorrect(correctAnswers+1);
+    }
+    newQuestions.splice(current,1);
+    setQuestions(newQuestions);
     setCurrent(current+1);
     if (current >= questions.length-1) {
       setCurrent(0)
@@ -206,7 +230,7 @@ function Quiz(props) {
   <div style={{marginTop: "2em" ,width: "30em", height: "15em"}}>
     <Slides width="30em" height="15em" total={questions.length} current={current}>
     {questions.map(q => (
-      <QuizQuestion {...q} push={push}/>
+      <QuizQuestion {...q} push={push} correctAnswers={correctAnswers}/>
     ))}
     </Slides>
   </div>
