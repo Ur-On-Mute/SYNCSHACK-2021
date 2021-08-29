@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom';
+import logo from '../images/Sigma_forums1.png'
 
 const NavBar = (props) => {
     return (
@@ -9,7 +10,12 @@ const NavBar = (props) => {
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-text">
                             <Link to="/">
-                                <a class="nav-link" href="/home">Home</a>
+                                <img class="nav-link" style={{width : 60}} src={logo} />
+                            </Link>
+                        </li>
+                        <li class="nav-item">
+                            <Link to="/">
+                                <a class="nav-link" >Home</a>
                             </Link>
                         </li>
                         <li class="nav-item">
