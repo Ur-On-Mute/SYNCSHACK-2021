@@ -11,6 +11,7 @@ import {
   } from "./sigma_math_renderer";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import dark from "./tomorrow.js";
+import { Link, withRouter } from 'react-router-dom';
 
 const PostPage = (props) => {
     // const [comments, setComments] = useState([
@@ -80,7 +81,7 @@ const PostPage = (props) => {
                     </div>
                     <p style={{color: '#1c1c1c', fontWeight: 500, display: 'inline-block', float: 'left'}} className='card-text'>{props.postBody}</p>
                     <button className='btn btn-outline-danger' style={{marginBottom: "10px"}} onClick={()=>{setShowSource(!showSource)}}>Show Source Code</button>
-                    <a className='btn btn-outline-danger' style={{marginBottom: "10px", "right": 0, "float": "right"}} href={"fork/"+props.postId}>Fork</a>
+                    <Link className='btn btn-outline-danger' style={{marginBottom: "10px", "right": 0, "float": "right"}} to={"fork/"+props.postId}>Fork</Link>
                     {showSource && 
                         <SyntaxHighlighter className="syntax-highlighter" language="xml" style={dark}>
                             {props.postQuestionBody}
@@ -106,4 +107,4 @@ const PostPage = (props) => {
     )
 }
 
-export default PostPage;
+export default withRouter(PostPage);
